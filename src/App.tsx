@@ -1,14 +1,23 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import AnimalCard from './components/animals/animal-card/AnimalCard';
-import Animals from './components/animals/Animals';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import Animals from "./components/animals/Animals";
+import InjuredAnimals from "./components/animals/animals-injured/InjuredAnimals";
+import Register from "./components/user/register/RegisterTabs";
+import Login from "./components/user/login/Login";
+
 
 function App() {
   return (
-    <Switch>
-      <Route path='/' component={Animals} exact /> 
-      <Route path='/damn' component={AnimalCard} /> 
-    </Switch>
+    <main id="content">
+      <Switch>
+        <Route path="/" component={Animals} exact />
+        <Route path="/animals" component={Animals} />
+        <Route path="/injured-animal" component={InjuredAnimals}></Route>
+        <Route path="/user/register" component={Register} />
+        <Route path="/user/login" component={Login} />
+
+      </Switch>
+    </main>
   );
 }
 

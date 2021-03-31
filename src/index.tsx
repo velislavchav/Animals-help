@@ -1,19 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import Navigation from './components/navigation/Navigation';
-import { BrowserRouter } from 'react-router-dom';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.scss";
+import App from "./App";
+import Navigation from "./components/navigation/Navigation";
+import { BrowserRouter } from "react-router-dom";
+import reportWebVitals from "./reportWebVitals";
+import { CircularProgress } from "@material-ui/core";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Navigation></Navigation>
       <App />
-    </BrowserRouter>, 
+    </BrowserRouter>
+    <div id="loader-container" className="disp-none">
+      <CircularProgress/>
+    </div>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

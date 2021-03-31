@@ -37,11 +37,12 @@ export default function Navigation() {
                     {/* <MenuIcon /> */}
                 </IconButton>
                 <Typography variant="h6" component="h1" className={classes.title}>
-                    News
+                    HelPANimals
                 </Typography>
-                <Button color="inherit" className={classes.navigationMenuItem} component={Link} to={'/damn'}> Injured animal </Button>
-                <Button color="inherit" className={classes.navigationMenuItem}> View animals </Button>
-                <Button color="inherit" className={classes.navigationMenuItem}> Login </Button>
+                <Button color="inherit" className={classes.navigationMenuItem} component={Link} to={'/injured-animal'}> Injured animal </Button>
+                <Button color="inherit" className={classes.navigationMenuItem} component={Link} to={'/animals'}> View animals </Button>
+                <Button color="inherit" className={classes.navigationMenuItem} component={Link} to={'/user/register'}> Register </Button>
+                <Button color="inherit" className={classes.navigationMenuItem} component={Link} to={'/user/login'}> Login </Button>
             </Toolbar>
         </AppBar>
     );
