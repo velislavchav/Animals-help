@@ -5,8 +5,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       "& > *": {
         margin: theme.spacing(1),
-        // margin: "auto",
         width: "97%",
+        marginBottom: "25px"
       },
     },
   })

@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Animals from "./components/animals/Animals";
 import InjuredAnimals from "./components/animals/animals-injured/InjuredAnimals";
