@@ -11,10 +11,8 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
-
         <Navigation></Navigation>
-        <App />
-        
+        <App />      
       </BrowserRouter>
     </AuthProvider>
     <div id="loader-container" className="disp-none">

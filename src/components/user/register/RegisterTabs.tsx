@@ -6,7 +6,9 @@ import Tab from '@material-ui/core/Tab';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import BusinessIcon from '@material-ui/icons/Business';
-import NormalUserForm from './Normal-user';
+import NormalUserRegisterForm from './NormalUserRegisterForm';
+import ShelterRegisterForm from './ShelterRegisterForm';
+import InstituteRegisterForm from './InstituteRegisterForm';
 
 const useStyles = makeStyles({
   root: {
@@ -41,7 +43,9 @@ export default function RegisterTabs() {
         <Tab icon={<HomeWorkIcon />} label="Shelters" />
         <Tab icon={<BusinessIcon />} label="Institute" />
       </Tabs>
-      <NormalUserForm></NormalUserForm>
+      {value === 0 ? <NormalUserRegisterForm/> : "" }
+      {value === 1 ? <ShelterRegisterForm/> : "" }
+      {value === 2 ? <InstituteRegisterForm/> : "" }
     </Paper>
   );
 }

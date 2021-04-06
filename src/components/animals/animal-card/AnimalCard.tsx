@@ -2,10 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
+// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
@@ -26,7 +26,7 @@ export default function AnimalCard() {
         <CardActionArea>
             <CardMedia
             className={classes.media}
-            image="/static/images/cards/contemplative-reptile.jpg"
+            image="https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-1100x628.jpg"
             title="Contemplative Reptile"
             />
             <CardContent>
@@ -39,14 +39,14 @@ export default function AnimalCard() {
             </Typography>
             </CardContent>
         </CardActionArea>
-        <CardActions>
+        {/* <CardActions>
             <Button size="small" color="primary">
             Share
             </Button>
             <Button size="small" color="primary">
             Learn More
             </Button>
-        </CardActions>
+        </CardActions> */}
         </Card>
   );
 }
