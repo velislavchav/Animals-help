@@ -6,15 +6,18 @@ import Navigation from "./components/navigation/Navigation";
 import { BrowserRouter } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastProvider } from "react-toast-notifications";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Navigation></Navigation>
-        <App />      
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <ToastProvider>
+        <AuthProvider>
+          <Navigation></Navigation>
+          <App />
+        </AuthProvider>
+      </ToastProvider>
+    </BrowserRouter>
     <div id="loader-container" className="disp-none">
       <CircularProgress />
     </div>

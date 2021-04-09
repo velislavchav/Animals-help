@@ -8,7 +8,9 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { TextField } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
+import { FormCustomValidations } from "../../../helpers/ValidateFormFields";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,11 +37,15 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "97%",
       marginBottom: "35px",
     },
+    button: {
+      margin: theme.spacing(1),
+      width: "97%",
+    },
   })
 );
 
 interface State {
-  username: string;
+  email: string;
   password: string;
   showPassword: boolean;
 }
@@ -47,10 +53,11 @@ interface State {
 export default function InputAdornments() {
   const classes = useStyles();
   const [values, setValues] = React.useState<State>({
-    username: "",
+    email: "",
     password: "",
     showPassword: false,
   });
+  const { login } = useAuth();
 
   const handleChange = (prop: keyof State) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -68,14 +75,17 @@ export default function InputAdornments() {
     event.preventDefault();
   };
 
-  // const handleSubmit = () => {
-    
-  // } 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (FormCustomValidations.IsEmailValid(values.email)) {
+      login(values.email, values.password);
+    }
+  };
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <h2 className={classes.titleLogin}> Login </h2>
-      <TextField label="Username" />
+      <TextField label="Email" onChange={handleChange("email")} />
       <FormControl className={clsx(classes.margin, classes.textField)}>
         <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
         <Input
@@ -96,6 +106,15 @@ export default function InputAdornments() {
           }
         />
       </FormControl>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        // endIcon={<Icon>send</Icon>}
+        onClick={handleSubmit}
+      >
+        Send
+      </Button>
     </form>
   );
 }

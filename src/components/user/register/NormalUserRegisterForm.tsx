@@ -6,6 +6,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import { useAuth } from "../../../contexts/AuthContext";
 import { FormCustomValidations } from "../../../helpers/ValidateFormFields";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,6 +30,7 @@ export default function NormalUserRegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepasword] = useState("");
+  const {signup, currentUser} = useAuth();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -52,10 +54,14 @@ export default function NormalUserRegisterForm() {
     }
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    FormCustomValidations.IsEmailValid(email);
-    FormCustomValidations.ArePasswordsValid(password, repassword);
+    if (FormCustomValidations.IsEmailValid(email) && FormCustomValidations.ArePasswordsValid(password, repassword)) {
+      try {
+        await signup(email, password);
+        console.log("successfully registered")
+      } catch {}
+    }
   };
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -88,6 +94,7 @@ export default function NormalUserRegisterForm() {
       >
         Send
       </Button>
+      {currentUser && currentUser.email}
     </form>
   );
 }
