@@ -1,0 +1,33 @@
+#main-navigation {
+  position: fixed;
+  flex-grow: 1;
+
+  .menu-button {
+    margin-right: 16px;
+    color: inherit;
+    margin-left: -12px;
+    display: none;
+  }
+
+  .title-navigation {
+    flex-grow: 1;
+  }
+
+  a:not(.menu-button) {
+    padding: 0 20px;
+    height: 100%;
+    text-align: center;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #main-navigation {
+    .menu-button {
+      display: inline-flex;
+    }
+
+    a:not(.menu-button) {
+        display: none;
+      }
+  }
+}

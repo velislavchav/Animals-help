@@ -1,6 +1,10 @@
-import React from "react";
-import clsx from "clsx";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useHistory } from "react-router";
+import { EmailErrorMessage } from "../../../helpers/ValidateFormFields";
+import { ILogin } from "../../../models/ILogin";
+import { toast } from "react-toastify";
+import "./Login.scss";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -9,98 +13,61 @@ import FormControl from "@material-ui/core/FormControl";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Button, TextField } from "@material-ui/core";
-import { FormCustomValidations } from "../../../helpers/ValidateFormFields";
-import { useAuth } from "../../../contexts/AuthContext";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "& .MuiTextField-root": {
-        margin: theme.spacing(1),
-        width: "97%",
-        marginBottom: "35px",
-      },
-      flexGrow: 1,
-      maxWidth: "600px",
-    },
-    titleLogin: {
-      textAlign: "center",
-    },
-    margin: {
-      margin: theme.spacing(1),
-    },
-    withoutLabel: {
-      marginTop: theme.spacing(3),
-    },
-    textField: {
-      margin: theme.spacing(1),
-      width: "97%",
-      marginBottom: "35px",
-    },
-    button: {
-      margin: theme.spacing(1),
-      width: "97%",
-    },
-  })
-);
-
-interface State {
-  email: string;
-  password: string;
-  showPassword: boolean;
-}
-
-export default function InputAdornments() {
-  const classes = useStyles();
-  const [values, setValues] = React.useState<State>({
+export default function Login() {
+  const { login } = useAuth();
+  const history = useHistory();
+  const [emailErrorText, setEmailErrorText] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [values, setValues] = useState<ILogin>({
     email: "",
     password: "",
-    showPassword: false,
   });
-  const { login } = useAuth();
 
-  const handleChange = (prop: keyof State) => (
+  const handleChange = (prop: keyof ILogin) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setValues({ ...values, [prop]: event.target.value });
+    if (prop === "email")
+      setEmailErrorText(EmailErrorMessage(event.target.value));
   };
 
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    if (FormCustomValidations.IsEmailValid(values.email)) {
-      login(values.email, values.password);
+    if (!emailErrorText) {
+      try {
+        await login(values.email, values.password);
+        toast.success("Successfully logged in");
+        history.push("/");
+      } catch (error) {
+        toast.error(error?.message);
+      }
     }
   };
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
-      <h2 className={classes.titleLogin}> Login </h2>
-      <TextField label="Email" onChange={handleChange("email")} />
-      <FormControl className={clsx(classes.margin, classes.textField)}>
+    <form className="login-form" noValidate autoComplete="off">
+      <h2> Login </h2>
+      <TextField
+        label="Email"
+        onChange={handleChange("email")}
+        helperText={emailErrorText}
+        error={!!emailErrorText}
+      />
+      <FormControl className="login-password">
         <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
         <Input
           id="standard-adornment-password"
-          type={values.showPassword ? "text" : "password"}
+          type={showPassword ? "text" : "password"}
           value={values.password}
           onChange={handleChange("password")}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
+                onClick={() => setShowPassword(!showPassword)}
               >
-                {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           }
@@ -109,7 +76,7 @@ export default function InputAdornments() {
       <Button
         variant="contained"
         color="primary"
-        className={classes.button}
+        className="login-submit"
         // endIcon={<Icon>send</Icon>}
         onClick={handleSubmit}
       >

@@ -1,6 +1,5 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
@@ -9,19 +8,9 @@ import BusinessIcon from '@material-ui/icons/Business';
 import NormalUserRegisterForm from './NormalUserRegisterForm';
 import ShelterRegisterForm from './ShelterRegisterForm';
 import InstituteRegisterForm from './InstituteRegisterForm';
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-    maxWidth: 625,
-  },
-  tabs: {
-    marginBottom: "25px"
-  }
-});
+import './RegisterForms.scss';
 
 export default function RegisterTabs() {
-  const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -29,7 +18,7 @@ export default function RegisterTabs() {
   };
 
   return (
-    <Paper square className={classes.root} component="section">
+    <Paper square className="register-container" component="section">
       <Tabs
         value={value}
         onChange={handleChange}
@@ -37,7 +26,7 @@ export default function RegisterTabs() {
         indicatorColor="primary"
         textColor="primary"
         aria-label="icon label tabs example"
-        className={classes.tabs}
+        className="register-user-tabs"
       >
         <Tab icon={<AccountCircleIcon />} label="Normal" />
         <Tab icon={<HomeWorkIcon />} label="Shelters" />

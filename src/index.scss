@@ -4,12 +4,12 @@ html {
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 0;  /* Remove scrollbar space */
-  background: transparent;  /* Optional: just make scrollbar invisible */
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #FF0000;
+  background: #ff0000;
 }
 // Hide scroll
 
@@ -21,6 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: hidden;
+  box-sizing: border-box;
 }
 
 .disp-none {
@@ -30,7 +31,10 @@ body {
 main#content {
   margin: auto;
   width: 90%;
-  margin-top: 100px;
+  margin-top: 65px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 // Loader

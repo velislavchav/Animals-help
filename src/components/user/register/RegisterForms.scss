@@ -1,0 +1,17 @@
+.register-container {
+  flex-grow: 1;
+  max-width: 625px;
+  margin-top: 30px;
+  padding: 19px;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+
+  .register-user-tabs {
+    margin-bottom: 25px;
+  }
+
+  .register-form > * {
+    width: 97%;
+    margin: 8px;
+    margin-bottom: 25px;
+  }
+}

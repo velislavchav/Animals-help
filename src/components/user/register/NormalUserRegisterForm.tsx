@@ -1,100 +1,85 @@
-import {
-  Button,
-  createStyles,
-  makeStyles,
-  TextField,
-  Theme,
-} from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/AuthContext";
-import { FormCustomValidations } from "../../../helpers/ValidateFormFields";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "& > *": {
-        margin: theme.spacing(1),
-        width: "97%",
-        marginBottom: "25px",
-      },
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-  })
-);
+import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
+import { INormalUser } from "../../../models/INormalUser";
 
 export default function NormalUserRegisterForm() {
-  const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepasword] = useState("");
-  const {signup, currentUser} = useAuth();
+  const [repassword, setRepassword] = useState("");
+  const [emailErrorText, setEmailErrorText] = useState("");
+  const [passwordErrorText, setPasswordErrorText] = useState("");
+  const { signup } = useAuth();
+  const [normalUser, setNormalUser] = useState<INormalUser>({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    profileImageUrl: "",
+  });
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: string
+  const handleChange = (prop: keyof INormalUser) => (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    switch (type) {
-      case "email":
-        setEmail(event.target.value);
-        break;
-      case "username":
-        setUsername(event.target.value);
-        break;
-      case "password":
-        setPassword(event.target.value);
-        break;
-      case "repassword":
-        setRepasword(event.target.value);
-        break;
-      default:
-        break;
-    }
+    setNormalUser({ ...normalUser, [prop]: event.target.value });
+    if (prop === "email")
+      setEmailErrorText(EmailErrorMessage(event.target.value));
+    if (prop === "password")
+      setPasswordErrorText(PasswordErrorMessage(event.target.value, repassword));
   };
+
+  const checkRepassword = (e: any) => {
+    setRepassword(e.target.value)
+    setPasswordErrorText(PasswordErrorMessage(normalUser.password, e.target.value));
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    if (FormCustomValidations.IsEmailValid(email) && FormCustomValidations.ArePasswordsValid(password, repassword)) {
+    if (!passwordErrorText && !emailErrorText) {
       try {
-        await signup(email, password);
-        console.log("successfully registered")
-      } catch {}
+        await signup(normalUser.email, normalUser.password);
+        toast.success("Successfully registered");
+      } catch (error) {
+        toast.error(error?.message);
+      }
     }
   };
+
   return (
-    <form className={classes.root} noValidate autoComplete="off">
+    <form className="register-form" noValidate autoComplete="off">
       <TextField
         label="Email"
-        value={email}
-        onChange={(e) => handleChange(e, "email")}
+        value={normalUser.email}
+        onChange={handleChange("email")}
+        helperText={emailErrorText}
+        error={!!emailErrorText}
       />
       <TextField
-        label="Username"
-        value={username}
-        onChange={(e) => handleChange(e, "username")}
+        label="First name"
+        value={normalUser.firstName}
+        onChange={handleChange("firstName")}
       />
       <TextField
+        label="Last name"
+        value={normalUser.lastName}
+        onChange={handleChange("lastName")}
+      />
+      <TextField
+        type="password"
         label="Password"
-        value={password}
-        onChange={(e) => handleChange(e, "password")}
+        value={normalUser.password}
+        onChange={handleChange("password")}
+        helperText={passwordErrorText}
+        error={!!passwordErrorText}
       />
       <TextField
+        type="password"
         label="Re-password"
         value={repassword}
-        onChange={(e) => handleChange(e, "repassword")}
+        onChange={checkRepassword}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        // endIcon={<Icon>send</Icon>}
-        onClick={handleSubmit}
-      >
-        Send
-      </Button>
-      {currentUser && currentUser.email}
+      {/* endIcon={<Icon>send</Icon>} */}
+      <Button variant="contained" color="primary" onClick={handleSubmit}> Send </Button>
     </form>
   );
 }

@@ -3,18 +3,20 @@ import Animals from "./components/animals/Animals";
 import InjuredAnimals from "./components/animals/animals-injured/InjuredAnimals";
 import Register from "./components/user/register/RegisterTabs";
 import Login from "./components/user/login/Login";
-
+import AnimalDetails from "./components/animal-details/AnimalDetails";
+import PrivateRoute from "./helpers/PrivateRoute"
 
 function App() {
   return (
     <main id="content">
       <Switch>
         <Route path="/" component={Animals} exact />
+        <Route path="/animals/dog/1" component={AnimalDetails} />
+        <PrivateRoute path="/animals/dog/2" component={AnimalDetails} />
         <Route path="/animals" component={Animals} />
         <Route path="/injured-animal" component={InjuredAnimals}></Route>
         <Route path="/user/register" component={Register} />
         <Route path="/user/login" component={Login} />
-
       </Switch>
     </main>
   );

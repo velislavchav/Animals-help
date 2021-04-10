@@ -1,30 +1,11 @@
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    filtersContainer: {
-      flexBasis: "100%",
-      textAlign: "right",
-      marginBottom: "15px",
-    },
-  })
-);
+import "./AnimalsFilter.scss";
 
 export default function AnimalsFilters() {
-  const classes = useStyles();
   const [type, setType] = React.useState("");
   const [age, setAge] = React.useState("");
   const [location, setLocation] = React.useState("");
@@ -50,8 +31,8 @@ export default function AnimalsFilters() {
   };
 
   return (
-    <section className={classes.filtersContainer}>
-      <FormControl className={classes.formControl}>
+    <section className="animals-filters-container">
+      <FormControl className="animals-filter-input-container">
         <InputLabel id="demo-simple-select-label">Type</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -65,7 +46,7 @@ export default function AnimalsFilters() {
           <MenuItem value={"Bird"}>Bird</MenuItem>
         </Select>
       </FormControl>
-      <FormControl className={classes.formControl}>
+      <FormControl className="animals-filter-input-container">
         <InputLabel id="demo-simple-select-label">Age</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -79,7 +60,7 @@ export default function AnimalsFilters() {
           <MenuItem value={30}>30</MenuItem>
         </Select>
       </FormControl>
-      <FormControl className={classes.formControl}>
+      <FormControl className="animals-filter-input-container">
         <InputLabel id="demo-simple-select-label">Location</InputLabel>
         <Select
           labelId="demo-simple-select-label"

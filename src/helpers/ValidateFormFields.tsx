@@ -5,14 +5,27 @@ const IsEmailValid = (emailValue: string) => {
   return false;
 };
 
-const ArePasswordsValid = (password: string, repassword: string) => {
+const PasswordsMatch = (password: string, repassword: string) => {
   if (password === "" || password !== repassword) {
     return false;
   }
   return true;
 };
 
-export const FormCustomValidations = {
+const EmailErrorMessage = (emailValue: string) => {
+  return IsEmailValid(emailValue) ? "" : "Not a valid email.";
+}
+
+const PasswordErrorMessage = (password: string, repassword: string = "") => {
+  if (password.length < 6) 
+    return "Password must be at least 6 characters."
+  
+  return PasswordsMatch(password, repassword) ? "" : "Passwords are not the same.";
+}
+
+export {
   IsEmailValid,
-  ArePasswordsValid,
+  PasswordsMatch,
+  EmailErrorMessage,
+  PasswordErrorMessage
 };

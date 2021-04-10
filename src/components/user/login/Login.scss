@@ -1,0 +1,25 @@
+.login-form {
+  flex-grow: 1;
+  max-width: 600px;
+
+  .MuiTextField-root {
+    margin: 8px;
+    width: 97%;
+    margin-bottom: 35px;
+  }
+
+  h2 {
+      text-align: center;
+  }
+
+  .login-password {
+    width: 97%;
+    margin: 8px;
+    margin-bottom: "35px";
+  }
+
+  .login-submit {
+    width: 97%;
+    margin: 8px;
+  }
+}

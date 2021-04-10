@@ -1,0 +1,19 @@
+.animals-filters-container {
+  text-align: right;
+  flex-basis: 100%;
+  margin-bottom: 15px;
+
+  .animals-filter-input-container {
+    margin: 8px;
+    min-width: 120px;
+  }
+}
+
+@media only screen and (max-width: 481px) {
+  .animals-filters-container {
+    .animals-filter-input-container {
+      min-width: 100%;
+      margin: 0;
+    }
+  }
+}

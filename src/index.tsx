@@ -1,22 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
+import "react-toastify/dist/ReactToastify.css"
 import App from "./App";
 import Navigation from "./components/navigation/Navigation";
 import { BrowserRouter } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ToastProvider } from "react-toast-notifications";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ToastProvider>
         <AuthProvider>
           <Navigation></Navigation>
           <App />
+          <ToastContainer />
         </AuthProvider>
-      </ToastProvider>
     </BrowserRouter>
     <div id="loader-container" className="disp-none">
       <CircularProgress />

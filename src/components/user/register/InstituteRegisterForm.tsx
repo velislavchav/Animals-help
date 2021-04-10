@@ -1,6 +1,6 @@
 import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
 import React, { useState } from "react";
-import { FormCustomValidations } from "../../../helpers/ValidateFormFields";
+import { IsEmailValid, PasswordsMatch } from "../../../helpers/ValidateFormFields";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,8 +56,8 @@ export default function InstituteRegisterForm() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    FormCustomValidations.IsEmailValid(email);
-    FormCustomValidations.ArePasswordsValid(password, repassword);
+    IsEmailValid(email);
+    PasswordsMatch(password, repassword);
   }
   return (
     <form className={classes.root} noValidate autoComplete="off">
