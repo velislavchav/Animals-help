@@ -11,13 +11,13 @@ import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-        <AuthProvider>
-          <Navigation></Navigation>
-          <App />
-          <ToastContainer />
-        </AuthProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navigation></Navigation>
+        <App />
+        <ToastContainer />
+      </BrowserRouter>
+    </AuthProvider>
     <div id="loader-container" className="disp-none">
       <CircularProgress />
     </div>

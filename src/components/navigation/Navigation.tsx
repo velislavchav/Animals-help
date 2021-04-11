@@ -32,7 +32,7 @@ export default function Navigation() {
                 <Typography variant="h6" component="h1" className="title-navigation">
                     HelPANimals
                 </Typography>
-                <Button color="inherit" component={Link} to={'/injured-animal'} className="ma"> Injured animal </Button>
+                {/* <Button color="inherit" component={Link} to={'/injured-animal'} className="ma"> Injured animal </Button> */}
                 <Button color="inherit" component={Link} to={'/animals'}> View animals </Button>
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button> }
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button> }

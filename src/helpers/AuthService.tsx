@@ -1,13 +1,15 @@
-// import firebase from 'firebase';
-// import React, { Component } from 'react'
+import firebase from '../firebase';
+import { INormalUser } from '../models/INormalUser';
 
-// export default class AuthService extends Component {
-//       db = firebase.firestore();
-//     render() {
-//         return (
-//             <div>
-                
-//             </div>
-//         )
-//     }
-// }
+const db = firebase.firestore();
+const collectionReference = db.collection("users");
+// const { serverTimestamp } = firebase.firestore.FieldValue;
+
+export const AuthService = {
+    addNormalUserToCollection(normalUser: INormalUser) {
+        collectionReference.doc(normalUser.email).set(normalUser)
+    },
+    getNormalUserFromCollection(normalUserEmail: string) {
+        return collectionReference.doc(normalUserEmail).get();
+    }
+}

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/AuthContext";
 import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
 import { INormalUser } from "../../../models/INormalUser";
+import { AuthService } from "../../../helpers/AuthService";
 
 export default function NormalUserRegisterForm() {
   const [repassword, setRepassword] = useState("");
@@ -38,6 +39,7 @@ export default function NormalUserRegisterForm() {
     if (!passwordErrorText && !emailErrorText) {
       try {
         await signup(normalUser.email, normalUser.password);
+        await AuthService.addNormalUserToCollection(normalUser)
         toast.success("Successfully registered");
       } catch (error) {
         toast.error(error?.message);
