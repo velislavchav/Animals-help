@@ -17,6 +17,7 @@ export default function NormalUserRegisterForm() {
     firstName: "",
     lastName: "",
     profileImageUrl: "",
+    role: "normal"
   });
 
   const handleChange = (prop: keyof INormalUser) => (

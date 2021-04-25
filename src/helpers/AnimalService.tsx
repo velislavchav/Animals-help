@@ -1,5 +1,5 @@
 import 'firebase/firestore';
-import firebase from '../firebase'
+import firebase, { firebaseTimestamp } from '../firebase'
 import { IAnimal } from '../models/IAnimal';
 
 const db = firebase.firestore();
@@ -7,7 +7,9 @@ const collectionReference = db.collection("animals");
 
 export const AnimalService = {
     addAnimalToCollection(animal: IAnimal) {
-        collectionReference.add(animal)
+        const ref: any = collectionReference.doc();
+        const myId: string = ref.id;
+        return collectionReference.add({ ...animal, id: myId, createdAt: firebaseTimestamp  })
     },
     async getAllAnimals() : Promise<any> {
         const markers: IAnimal[] = [];

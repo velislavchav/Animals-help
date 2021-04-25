@@ -17,6 +17,7 @@ export default function AnimalDetails(props: any) {
     type: "",
     name: "",
     age: 0,
+    weight: 0,
     color: "",
     image: "",
     currentLocation: "",
@@ -69,6 +70,10 @@ export default function AnimalDetails(props: any) {
             <TableRow key="Age">
               <TableCell component="th" scope="row"> Age </TableCell>
               <TableCell align="right">{animal.age}</TableCell>
+            </TableRow>
+            <TableRow key="Weight">
+              <TableCell component="th" scope="row"> Weight </TableCell>
+              <TableCell align="right">{animal.weight}</TableCell>
             </TableRow>
             <TableRow key="Color">
               <TableCell component="th" scope="row"> Color </TableCell>

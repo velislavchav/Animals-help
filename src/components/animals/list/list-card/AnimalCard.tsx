@@ -4,7 +4,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import { IAnimal } from "../../../models/IAnimal";
+import { IAnimal } from "../../../../models/IAnimal";
 import "./AnimalCard.scss";
 
 export default class AnimalCard extends React.Component {

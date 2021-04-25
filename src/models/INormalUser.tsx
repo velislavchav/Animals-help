@@ -4,4 +4,6 @@ export interface INormalUser {
   firstName: string;
   lastName: string;
   profileImageUrl: string;
+  role: string;
+  createdAt?: Date;
 }

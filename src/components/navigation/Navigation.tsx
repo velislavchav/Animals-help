@@ -27,15 +27,16 @@ export default function Navigation() {
         <AppBar id="main-navigation">
             <Toolbar component="nav">
                 <IconButton edge="start" className="menu-button" color="inherit" aria-label="menu" component={Link} to={'/'} >
-                    <MenuIcon /> 
+                    <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" component="h1" className="title-navigation">
+                <Typography variant="h6" component="h1" className="title-navigation" onClick={() => history.push("/")}>
                     HelPANimals
                 </Typography>
                 {/* <Button color="inherit" component={Link} to={'/injured-animal'} className="ma"> Injured animal </Button> */}
                 <Button color="inherit" component={Link} to={'/animals'}> View animals </Button>
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button> }
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button> }
+                { currentUser?.email ? <Button color="inherit" component={Link} to={'/animals/add/' + currentUser.displayName}> Add animal </Button> : "" }
                 { currentUser?.email ? <Button color="inherit" onClick={handleLogout}> Logout </Button> : "" }
             </Toolbar>
         </AppBar>

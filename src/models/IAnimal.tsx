@@ -3,8 +3,12 @@ export interface IAnimal {
     type: string;
     name: string;
     age: number;
+    weight: number;
     color: string;
     image: string;
     currentLocation: string;
     description: string;
+    createdBy?: string;
+    creator?: string;
+    createdAt?: Date;
 }

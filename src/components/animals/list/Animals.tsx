@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { AnimalService } from "../../helpers/AnimalService";
-import { IAnimal } from "../../models/IAnimal";
-import AnimalCard from "./animals-card/AnimalCard";
-import AnimalsFilters from "./animals-filters/AnimalsFilter";
+import { AnimalService } from "../../../helpers/AnimalService";
+import { IAnimal } from "../../../models/IAnimal";
+import AnimalCard from "./list-card/AnimalCard";
+import AnimalsFilters from "./list-filters/AnimalsFilter";
 import Pagination from "@material-ui/lab/Pagination";
 import "./Animals.scss";
 
