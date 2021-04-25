@@ -11,7 +11,7 @@ export default class AnimalCard extends React.Component {
   render() {
     const data = this.props as IAnimal;
     return (
-      <Card className="animals-list-card" component="article">
+      <Card component="article">
         <CardActionArea>
           <CardMedia
             className="animals-list-card-image"

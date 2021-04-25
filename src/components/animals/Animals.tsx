@@ -19,7 +19,6 @@ export default function Animals() {
   }, []);
 
   const redirectToAnimalDetails = (animal: IAnimal) => {
-    console.log("hmm")
     history.push(`/animals/${animal.type}/${animal.id}`);
   }
 
@@ -27,7 +26,7 @@ export default function Animals() {
     <section id="animals-list-container">
       <AnimalsFilters></AnimalsFilters>
       {animals.map((animal: any) => {
-        return <AnimalCard  key={animal.id} {...animal} />
+        return <div className="animals-list-card" onClick={() => redirectToAnimalDetails(animal as IAnimal)} key={animal.id}><AnimalCard {...animal}/></ div>
         // onClick={redirectToAnimalDetails(animal as IAnimal)}
       })}
       <Pagination

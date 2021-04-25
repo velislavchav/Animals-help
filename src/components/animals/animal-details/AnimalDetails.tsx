@@ -10,7 +10,6 @@ import { AnimalService } from "../../../helpers/AnimalService";
 import "./AnimalDetails.scss";
 import { IAnimal } from "../../../models/IAnimal";
 
-
 export default function AnimalDetails(props: any) {
   const animalId = props.match.params.id;
   const [animal, setAnimal] = useState<IAnimal>({
@@ -23,16 +22,21 @@ export default function AnimalDetails(props: any) {
     currentLocation: "",
     description: "",
   })
-  useEffect(() => {
-    // const unsubscribe = 
-    AnimalService.getAnimal(animalId).then(data => {
-      console.log(data as IAnimal)
-      setAnimal(data as IAnimal)
+  useEffect(() : any => {
+    let isMounted = true;
+    AnimalService.getAnimal(animalId).then((doc) => {
+      if (doc.exists) {
+        setAnimal(doc.data() as IAnimal)
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    }).catch((error) => {
+      console.log("Error getting document:", error);
     })
-    // return () => {
-    //   unsubscribe
-    // }
-  }, [])
+
+    return () => { isMounted = false };
+  }, [animalId])
 
   return (
     <section id="animal-details-container">
