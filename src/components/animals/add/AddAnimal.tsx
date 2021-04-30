@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import "./AddAnimal.scss";
 import { Button, TextField } from "@material-ui/core";
 import { AnimalService } from "../../../helpers/AnimalService";
+import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function AddAnimal() {
     const { currentUser } = useAuth();
@@ -28,11 +29,17 @@ export default function AddAnimal() {
         setNewAnimal({ ...newAnimal, [prop]: event.target.value });
     };
 
+    const handleEnterSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (CheckIsEnterPressed(event)) {
+            handleSubmit(event)
+        }
+    }
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            AnimalService.addAnimalToCollection(newAnimal).then((docRef: any) => {
-                toast.success("Animal is added with ID: ", docRef.id)
+            AnimalService.addAnimalToCollection(newAnimal).then(() => {
+                toast.success("Animal is added")
                 history.push("/animals")
             })
         } catch (error) {
@@ -46,41 +53,49 @@ export default function AddAnimal() {
             <TextField
                 label="Type"
                 onChange={handleChange("type")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Name"
                 onChange={handleChange("name")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Age"
                 onChange={handleChange("age")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
-             <TextField
+            <TextField
                 label="Weight"
                 onChange={handleChange("weight")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Color"
                 onChange={handleChange("color")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Image link"
                 onChange={handleChange("image")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Location"
                 onChange={handleChange("currentLocation")}
+                onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
                 label="Description"
                 onChange={handleChange("description")}
+                onKeyPress={handleEnterSubmit}
                 multiline
             />
             <Button

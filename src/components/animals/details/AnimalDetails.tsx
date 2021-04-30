@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Paper } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,6 +8,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { AnimalService } from "../../../helpers/AnimalService";
+import { Link } from 'react-router-dom';
 import "./AnimalDetails.scss";
 import { IAnimal } from "../../../models/IAnimal";
 
@@ -24,23 +26,24 @@ export default function AnimalDetails(props: any) {
     description: "",
   })
   useEffect(() : any => {
-    let isMounted = true;
     AnimalService.getAnimal(animalId).then((doc) => {
       if (doc.exists) {
         setAnimal(doc.data() as IAnimal)
       } else {
-        // doc.data() will be undefined in this case
         console.log("No such document!");
       }
     }).catch((error) => {
       console.log("Error getting document:", error);
     })
 
-    return () => { isMounted = false };
+    return () => { return false };
   }, [animalId])
 
   return (
     <section id="animal-details-container">
+      <div className="back-to-animals">
+        <Button color="inherit" component={Link} to={'/animals'}>Back to all animals</Button>
+      </div>
       <Paper
         elevation={3}
         variant="outlined"
@@ -89,6 +92,7 @@ export default function AnimalDetails(props: any) {
       <p>
         {animal.description}
       </p>
+
     </section>
   );
 }

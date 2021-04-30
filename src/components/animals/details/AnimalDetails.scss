@@ -19,6 +19,18 @@
     }
   }
 
+  .back-to-animals {
+    flex-basis: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+    a {
+      color: #fff;
+      background-color: #3f51b5;
+    }
+  }
+
   .animal-details-table {
     flex-basis: 45%;
   }

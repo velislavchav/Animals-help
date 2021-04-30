@@ -13,6 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Button, TextField } from "@material-ui/core";
+import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function Login() {
   const { login } = useAuth();
@@ -31,6 +32,12 @@ export default function Login() {
     if (prop === "email")
       setEmailErrorText(EmailErrorMessage(event.target.value));
   };
+
+  const handleEnterSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (CheckIsEnterPressed(event)) {
+      handleSubmit(event)
+    }
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -51,6 +58,7 @@ export default function Login() {
       <TextField
         label="Email"
         onChange={handleChange("email")}
+        onKeyPress={handleEnterSubmit}
         helperText={emailErrorText}
         error={!!emailErrorText}
       />
@@ -61,13 +69,13 @@ export default function Login() {
           type={showPassword ? "text" : "password"}
           value={values.password}
           onChange={handleChange("password")}
+          onKeyPress={handleEnterSubmit}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
                 onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
+              > {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           }

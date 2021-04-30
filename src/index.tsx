@@ -10,17 +10,17 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Navigation></Navigation>
-        <App />
-        <ToastContainer />
-      </BrowserRouter>
-    </AuthProvider>
+  // <React.StrictMode>
+  <AuthProvider>
+    <BrowserRouter>
+      <Navigation></Navigation>
+      <App />
+      <ToastContainer />
+    </BrowserRouter>
     <div id="loader-container" className="disp-none">
       <CircularProgress />
     </div>
-  </React.StrictMode>,
+  </AuthProvider>,
+  // </React.StrictMode>
   document.getElementById("root")
 );

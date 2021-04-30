@@ -1,35 +1,15 @@
-import React from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import "./AnimalsFilter.scss";
+import IAnimalFilters from "../../../../models/IAnimalFilters";
 
-export default function AnimalsFilters() {
-  const [type, setType] = React.useState("");
-  const [age, setAge] = React.useState("");
-  const [location, setLocation] = React.useState("");
+interface IAnimalFiltersProps extends IAnimalFilters {
+  changeFilter: any
+}
 
-  const handleChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-    filterType: string
-  ) => {
-    switch (filterType) {
-      case "type":
-        setType(event.target.value as string);
-        break;
-      case "age":
-        setAge(event.target.value as string);
-        break;
-      case "location":
-        setLocation(event.target.value as string);
-        break;
-      default:
-        break;
-    }
-    setAge(event.target.value as string);
-  };
-
+export default function AnimalsFilters(props: IAnimalFiltersProps) {
   return (
     <section className="animals-filters-container">
       <FormControl className="animals-filter-input-container">
@@ -37,36 +17,41 @@ export default function AnimalsFilters() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={type}
-          onChange={(e) => handleChange(e, "type")}
+          value={props?.type}
+          name="type"
+          onChange={props?.changeFilter}
         >
           <MenuItem value="">All</MenuItem>
-          <MenuItem value={"Dog"}>Dog</MenuItem>
-          <MenuItem value={"Lizard"}>Lizard</MenuItem>
-          <MenuItem value={"Bird"}>Bird</MenuItem>
+          <MenuItem value={"dog"}>Dog</MenuItem>
+          <MenuItem value={"lizard"}>Lizard</MenuItem>
+          <MenuItem value={"bird"}>Bird</MenuItem>
         </Select>
       </FormControl>
       <FormControl className="animals-filter-input-container">
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <InputLabel id="demo-simple-select-label">Color</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={age}
-          onChange={(e) => handleChange(e, "age")}
+          value={props?.color}
+          name="color"
+          onChange={props?.changeFilter}
         >
           <MenuItem value="">All</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
+          <MenuItem value={"red"}>Red</MenuItem>
+          <MenuItem value={"blue"}>Blue</MenuItem>
+          <MenuItem value={"brown"}>Brown</MenuItem>
+          <MenuItem value={"black"}>Black</MenuItem>
         </Select>
       </FormControl>
       <FormControl className="animals-filter-input-container">
         <InputLabel id="demo-simple-select-label">Location</InputLabel>
         <Select
+          // ref={filters.location}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={location}
-          onChange={(e) => handleChange(e, "location")}
+          value={props?.currentLocation}
+          name="currentLocation"
+          onChange={props?.changeFilter}
         >
           <MenuItem value="">All</MenuItem>
           <MenuItem value={"Plovdiv"}>Plovdiv</MenuItem>
