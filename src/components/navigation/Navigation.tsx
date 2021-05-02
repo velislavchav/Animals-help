@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from 'react-toastify';
 import "./Navigation.scss";
+import { IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 
 export default function Navigation() {
     const { logout, currentUser } = useAuth();
@@ -36,7 +37,7 @@ export default function Navigation() {
                 <Button color="inherit" component={Link} to={'/animals'}> View animals </Button>
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button> }
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button> }
-                { currentUser?.email ? <Button color="inherit" component={Link} to={'/animals/add/' + currentUser.displayName}> Add animal </Button> : "" }
+                { IsTheUserHasAccess(currentUser, ["shelter"]) ? <Button color="inherit" component={Link} to={'/animals/add/' + currentUser.displayName}> Add animal </Button> : "" }
                 { currentUser?.email ? <Button color="inherit" onClick={handleLogout}> Logout </Button> : "" }
             </Toolbar>
         </AppBar>

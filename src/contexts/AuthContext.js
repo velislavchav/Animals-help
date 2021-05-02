@@ -1,3 +1,4 @@
+import firebase from '../firebase'
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../firebase";
 
@@ -20,21 +21,42 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
+    setCurrentUser(null);
     return auth.signOut();
   }
 
   function resetPassword(email) {
     return auth.sendPasswordResetEmail(email)
   }
-  
+
+  function getUserAdditionalData(userEmail) {
+    if (userEmail) {
+      return firebase.firestore().collection("users").doc(userEmail).get();
+    }
+  }
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+    let userResult = {};
+    let unsubscribe = null;
+    async function fetchAllUserData() {
+      unsubscribe = await auth.onAuthStateChanged(async user => {
+        userResult = await { ...user };
+        if (user?.email) {  //add user data from collection
+          await getUserAdditionalData(user.email).then(async doc => {
+            doc?.exists ? userResult = await { ...doc.data(), ...userResult } : userResult = await { ...user };
+          }).catch((error) => {
+            console.log("Error getting user additional data:", error);
+          });
+        }
+        await setCurrentUser(userResult);
+        await setLoading(false);
+      })
+    }
+    
+    fetchAllUserData();
     return unsubscribe;
   }, []);
- 
+
   const value = { currentUser, signup, login, logout, resetPassword };
 
   return (

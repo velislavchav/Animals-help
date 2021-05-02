@@ -5,8 +5,8 @@ const IsEmailValid = (emailValue: string) => {
   return false;
 };
 
-const PasswordsMatch = (password: string, repassword: string) => {
-  if (password === "" || password !== repassword) {
+const PasswordsMatch = (password: string | undefined, repassword: string) => {
+  if (password === "" || password !== repassword || typeof password === undefined) {
     return false;
   }
   return true;
@@ -16,8 +16,8 @@ const EmailErrorMessage = (emailValue: string) => {
   return IsEmailValid(emailValue) ? "" : "Not a valid email.";
 }
 
-const PasswordErrorMessage = (password: string, repassword: string = "") => {
-  if (password.length < 6) 
+const PasswordErrorMessage = (password: string | undefined, repassword: string = "") => {
+  if (password && password.length < 6) 
     return "Password must be at least 6 characters."
   
   return PasswordsMatch(password, repassword) ? "" : "Passwords are not the same.";

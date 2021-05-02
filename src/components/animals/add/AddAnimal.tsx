@@ -7,6 +7,10 @@ import "./AddAnimal.scss";
 import { Button, TextField } from "@material-ui/core";
 import { AnimalService } from "../../../helpers/AnimalService";
 import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 export default function AddAnimal() {
     const { currentUser } = useAuth();
@@ -25,7 +29,7 @@ export default function AddAnimal() {
         creator: currentUser?.email,
     });
 
-    const handleChange = (prop: keyof IAnimal) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (prop: keyof IAnimal) => (event: React.ChangeEvent<HTMLInputElement | any>) => {
         setNewAnimal({ ...newAnimal, [prop]: event.target.value });
     };
 
@@ -39,7 +43,7 @@ export default function AddAnimal() {
         e.preventDefault();
         try {
             AnimalService.addAnimalToCollection(newAnimal).then(() => {
-                toast.success("Animal is added")
+                toast.success("Animal is added successfully")
                 history.push("/animals")
             })
         } catch (error) {
@@ -50,12 +54,36 @@ export default function AddAnimal() {
     return (
         <form className="add-animal-form" noValidate autoComplete="off">
             <h2> Add animal </h2>
-            <TextField
-                label="Type"
-                onChange={handleChange("type")}
-                onKeyPress={handleEnterSubmit}
-                className="add-animal-field"
-            />
+            <FormControl className="add-animal-field">
+                <InputLabel>Type</InputLabel>
+                <Select
+                    value={newAnimal.type}
+                    name="type"
+                    onChange={handleChange("type")}
+                    required
+                >
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value={"dog"}>Dog</MenuItem>
+                    <MenuItem value={"lizard"}>Lizard</MenuItem>
+                    <MenuItem value={"bird"}>Bird</MenuItem>
+                </Select>
+            </FormControl>
+            <FormControl className="add-animal-field">
+                <InputLabel>Location</InputLabel>
+                <Select
+                    value={newAnimal.currentLocation}
+                    name="type"
+                    onChange={handleChange("currentLocation")}
+                    required
+                >
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value={"Plovdiv"}>Plovdiv</MenuItem>
+                    <MenuItem value={"Varna"}>Varna</MenuItem>
+                    <MenuItem value={"Sofia"}>Sofia</MenuItem>
+                    <MenuItem value={"Burgas"}>Burgas</MenuItem>
+                    <MenuItem value={"Smolyan"}>Smolyan</MenuItem>
+                </Select>
+            </FormControl>
             <TextField
                 label="Name"
                 onChange={handleChange("name")}
@@ -67,30 +95,35 @@ export default function AddAnimal() {
                 onChange={handleChange("age")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
+                type="number"
             />
             <TextField
                 label="Weight"
                 onChange={handleChange("weight")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
+                type="number"
             />
-            <TextField
-                label="Color"
-                onChange={handleChange("color")}
-                onKeyPress={handleEnterSubmit}
-                className="add-animal-field"
-            />
+            <FormControl className="add-animal-field">
+                <InputLabel>Color</InputLabel>
+                <Select
+                    value={newAnimal.color}
+                    name="type"
+                    onChange={handleChange("color")}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value={"red"}>Red</MenuItem>
+                    <MenuItem value={"blue"}>Blue</MenuItem>
+                    <MenuItem value={"brown"}>Brown</MenuItem>
+                    <MenuItem value={"black"}>Black</MenuItem>
+                </Select>
+            </FormControl>
             <TextField
                 label="Image link"
                 onChange={handleChange("image")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
-            />
-            <TextField
-                label="Location"
-                onChange={handleChange("currentLocation")}
-                onKeyPress={handleEnterSubmit}
-                className="add-animal-field"
+                required
             />
             <TextField
                 label="Description"

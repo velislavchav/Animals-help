@@ -1,81 +1,110 @@
-import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
-import { IsEmailValid, PasswordsMatch } from "../../../helpers/ValidateFormFields";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "& > *": {
-        margin: theme.spacing(1),
-        width: "97%",
-        marginBottom: "25px",
-      },
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-  })
-);
+import { toast } from "react-toastify";
+import { useAuth } from "../../../contexts/AuthContext";
+import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
+import { IShelter } from "../../../models/IShelter";
+import { AuthService } from "../../../helpers/AuthService";
+import { useHistory } from "react-router";
+import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function ShelterRegisterForm() {
-  const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepasword] = useState("");
-  const [address, setAddress] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [emailErrorText, setEmailErrorText] = useState("");
+  const [passwordErrorText, setPasswordErrorText] = useState("");
+  const { signup } = useAuth();
+  const history = useHistory();
+  const [shelter, setShelter] = useState<IShelter>({
+    email: "",
+    password: "",
+    name: "",
+    profileImageUrl: "",
+    role: "shelter",
+    address: "",
+    vatNr: ""
+  });
 
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: string
+  const handleChange = (prop: keyof IShelter) => (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    switch (type) {
-      case "email":
-        setEmail(event.target.value);
-        break;
-      case "username":
-        setUsername(event.target.value);
-        break;
-      case "password":
-        setPassword(event.target.value);
-        break;
-      case "repassword":
-        setRepasword(event.target.value);
-        break;
-        case "address":
-        setAddress(event.target.value);
-        break;
-      default:
-        break;
+    setShelter({ ...shelter, [prop]: event.target.value });
+    if (prop === "email")
+      setEmailErrorText(EmailErrorMessage(event.target.value));
+    if (prop === "password")
+      setPasswordErrorText(PasswordErrorMessage(event.target.value, repassword));
+  };
+
+  const checkRepassword = (e: any) => {
+    setRepassword(e.target.value)
+    setPasswordErrorText(PasswordErrorMessage(shelter.password, e.target.value));
+  }
+
+  const handleEnterSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (CheckIsEnterPressed(event)) {
+      handleSubmit(event)
+    }
+  }
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!passwordErrorText && !emailErrorText) {
+      try {
+        await signup(shelter.email, shelter.password);
+        await AuthService.addShelterToCollection(shelter);
+        toast.success("Successfully registered");
+        history.push("/");
+      } catch (error) {
+        toast.error(error?.message);
+      }
     }
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    IsEmailValid(email);
-    PasswordsMatch(password, repassword);
-  }
   return (
-    <form className={classes.root} noValidate autoComplete="off">
+    <form className="register-form" noValidate autoComplete="off">
       <TextField
         label="Email"
-        value={email}
-        onChange={(e) => handleChange(e, "email")}
+        value={shelter.email}
+        onChange={handleChange("email")}
+        onKeyPress={handleEnterSubmit}
+        helperText={emailErrorText}
+        error={!!emailErrorText}
       />
-      <TextField label="Username" value={username} onChange={(e) => handleChange(e, "username")}/>
-      <TextField label="Password" value={password} onChange={(e) => handleChange(e, "password")} />
-      <TextField label="Re-password" value={repassword} onChange={(e) => handleChange(e, "repassword")} />
-      <TextField label="Address" value={address} onChange={(e) => handleChange(e, "address")}/>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        // endIcon={<Icon>send</Icon>}
-        onClick={handleSubmit}
-      >
-         Send
-      </Button>
+      <TextField
+        label="Name"
+        value={shelter.name}
+        onChange={handleChange("name")}
+        onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        type="password"
+        label="Password"
+        value={shelter.password}
+        onChange={handleChange("password")}
+        onKeyPress={handleEnterSubmit}
+        helperText={passwordErrorText}
+        error={!!passwordErrorText}
+      />
+      <TextField
+        type="password"
+        label="Re-password"
+        value={repassword}
+        onChange={checkRepassword}
+        onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        label="Address"
+        value={shelter.address}
+        onChange={handleChange("address")}
+        onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        label="VAT Number"
+        value={shelter.vatNr}
+        onChange={handleChange("vatNr")}
+        onKeyPress={handleEnterSubmit}
+      />
+      {/* endIcon={<Icon>send</Icon>} */}
+      <Button variant="contained" color="primary" onClick={handleSubmit}> Send </Button>
     </form>
   );
 }

@@ -5,12 +5,15 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
 import { INormalUser } from "../../../models/INormalUser";
 import { AuthService } from "../../../helpers/AuthService";
+import { useHistory } from "react-router";
+import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function NormalUserRegisterForm() {
   const [repassword, setRepassword] = useState("");
   const [emailErrorText, setEmailErrorText] = useState("");
   const [passwordErrorText, setPasswordErrorText] = useState("");
   const { signup } = useAuth();
+  const history = useHistory();
   const [normalUser, setNormalUser] = useState<INormalUser>({
     email: "",
     password: "",
@@ -35,13 +38,20 @@ export default function NormalUserRegisterForm() {
     setPasswordErrorText(PasswordErrorMessage(normalUser.password, e.target.value));
   }
 
+  const handleEnterSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (CheckIsEnterPressed(event)) {
+      handleSubmit(event)
+    }
+  }
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!passwordErrorText && !emailErrorText) {
       try {
         await signup(normalUser.email, normalUser.password);
-        await AuthService.addNormalUserToCollection(normalUser)
+        await AuthService.addNormalUserToCollection(normalUser);
         toast.success("Successfully registered");
+        history.push("/");
       } catch (error) {
         toast.error(error?.message);
       }
@@ -54,6 +64,7 @@ export default function NormalUserRegisterForm() {
         label="Email"
         value={normalUser.email}
         onChange={handleChange("email")}
+        onKeyPress={handleEnterSubmit}
         helperText={emailErrorText}
         error={!!emailErrorText}
       />
@@ -61,17 +72,20 @@ export default function NormalUserRegisterForm() {
         label="First name"
         value={normalUser.firstName}
         onChange={handleChange("firstName")}
+        onKeyPress={handleEnterSubmit}
       />
       <TextField
         label="Last name"
         value={normalUser.lastName}
         onChange={handleChange("lastName")}
+        onKeyPress={handleEnterSubmit}
       />
       <TextField
         type="password"
         label="Password"
         value={normalUser.password}
         onChange={handleChange("password")}
+        onKeyPress={handleEnterSubmit}
         helperText={passwordErrorText}
         error={!!passwordErrorText}
       />
@@ -80,8 +94,9 @@ export default function NormalUserRegisterForm() {
         label="Re-password"
         value={repassword}
         onChange={checkRepassword}
-      />
-      {/* endIcon={<Icon>send</Icon>} */}
+        onKeyPress={handleEnterSubmit}
+        />
+        {/* endIcon={<Icon>send</Icon>} */}
       <Button variant="contained" color="primary" onClick={handleSubmit}> Send </Button>
     </form>
   );

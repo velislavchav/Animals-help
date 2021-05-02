@@ -15,8 +15,16 @@ const CheckIsEnterPressed = (event: any) => {
     return event?.keyCode === 13 || event?.key === 'Enter' ? true : false;
 }
 
+const IsTheUserHasAccess = (user: any, accessRoles: string[]) => {
+    if (user?.role && user?.email) {
+        return user.role === "admin" ? true : accessRoles.includes(user.role);
+    }
+    return false
+}
+
 export {
     CheckIfStringIsEmpty,
     CheckIfObjectValuesAreEmpty,
-    CheckIsEnterPressed
+    CheckIsEnterPressed,
+    IsTheUserHasAccess
 };

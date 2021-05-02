@@ -9,11 +9,15 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { AnimalService } from "../../../helpers/AnimalService";
 import { Link } from 'react-router-dom';
+import { useAuth } from "../../../contexts/AuthContext";
 import "./AnimalDetails.scss";
 import { IAnimal } from "../../../models/IAnimal";
+import AdoptAnimalAgreementModal from "../adopt-modal/AdoptAnimalAgreementModal";
+import { IsTheUserHasAccess } from "../../../helpers/GeneralHelper";
 
 export default function AnimalDetails(props: any) {
   const animalId = props.match.params.id;
+  const { currentUser } = useAuth();
   const [animal, setAnimal] = useState<IAnimal>({
     id: animalId,
     type: "",
@@ -25,7 +29,8 @@ export default function AnimalDetails(props: any) {
     currentLocation: "",
     description: "",
   })
-  useEffect(() : any => {
+
+  useEffect((): any => {
     AnimalService.getAnimal(animalId).then((doc) => {
       if (doc.exists) {
         setAnimal(doc.data() as IAnimal)
@@ -41,8 +46,9 @@ export default function AnimalDetails(props: any) {
 
   return (
     <section id="animal-details-container">
-      <div className="back-to-animals">
+      <div className="animal-details-top-buttons-container">
         <Button color="inherit" component={Link} to={'/animals'}>Back to all animals</Button>
+        {IsTheUserHasAccess(currentUser, ["normal"]) ? <AdoptAnimalAgreementModal /> : ""}
       </div>
       <Paper
         elevation={3}
@@ -59,16 +65,16 @@ export default function AnimalDetails(props: any) {
       </Paper>
       <TableContainer className="animal-details-table" component={Paper}>
         <Table aria-label="simple table">
-          <TableHead>
+          {/* <TableHead>
             <TableRow>
               <TableCell>Category</TableCell>
               <TableCell align="right">Values</TableCell>
             </TableRow>
-          </TableHead>
+          </TableHead> */}
           <TableBody>
             <TableRow key="Type">
               <TableCell component="th" scope="row"> Type </TableCell>
-              <TableCell align="right"> {animal.type}</TableCell>
+              <TableCell align="right"> {animal.type} </TableCell>
             </TableRow>
             <TableRow key="Age">
               <TableCell component="th" scope="row"> Age </TableCell>
