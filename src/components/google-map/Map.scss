@@ -1,0 +1,26 @@
+#google-map-container {
+    .locate-me-button, .signals-type-holder {
+        position: fixed;
+        top: 85px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    
+    .locate-me-button {
+        right: 20px;
+    }
+
+    .signals-type-holder {
+        left: 20px;
+        background-color: #3f51b5;
+
+        button {
+            min-width: 200px;
+        }
+
+        .active {
+            background-color: #051466;
+        }
+    }
+}
+

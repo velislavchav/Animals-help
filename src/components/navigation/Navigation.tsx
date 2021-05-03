@@ -34,6 +34,7 @@ export default function Navigation() {
                     HelPANimals
                 </Typography>
                 {/* <Button color="inherit" component={Link} to={'/injured-animal'} className="ma"> Injured animal </Button> */}
+                <Button color="inherit" component={Link} to={'/'}> Map </Button>
                 <Button color="inherit" component={Link} to={'/animals'}> View animals </Button>
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button> }
                 { currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button> }

@@ -22,9 +22,21 @@ const IsTheUserHasAccess = (user: any, accessRoles: string[]) => {
     return false
 }
 
+const formatFullDate = (date: Date) => {
+    const DD = ("0" + date.getDate()).slice(-2);
+    const MM = ("0" + (date.getMonth() + 1)).slice(-2);
+    const YYYY = date.getFullYear();
+    const hh = ("0" + date.getHours()).slice(-2);
+    const mm = ("0" + date.getMinutes()).slice(-2);
+    const ss = ("0" + date.getSeconds()).slice(-2);
+    const date_string = DD + "/" + MM + "/" + YYYY + " " + hh + ":" + mm + ":" + ss;
+    return date_string;
+}
+
 export {
     CheckIfStringIsEmpty,
     CheckIfObjectValuesAreEmpty,
     CheckIsEnterPressed,
-    IsTheUserHasAccess
+    IsTheUserHasAccess,
+    formatFullDate
 };
