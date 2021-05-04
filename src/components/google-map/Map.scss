@@ -1,11 +1,12 @@
 #google-map-container {
-    .locate-me-button, .signals-type-holder {
+    .locate-me-button,
+    .signals-type-holder {
         position: fixed;
         top: 85px;
         z-index: 1;
         cursor: pointer;
     }
-    
+
     .locate-me-button {
         right: 20px;
     }
@@ -24,3 +25,18 @@
     }
 }
 
+@media screen and (max-width: 768px) {
+    #google-map-container {
+        .signals-type-holder {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

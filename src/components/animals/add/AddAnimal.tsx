@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "./AddAnimal.scss";
 import { Button, TextField } from "@material-ui/core";
 import { AnimalService } from "../../../helpers/AnimalService";
-import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -27,6 +27,7 @@ export default function AddAnimal() {
         description: "",
         createdBy: currentUser?.uid,
         creator: currentUser?.email,
+        usersAppliedForAdoption: []
     });
 
     const handleChange = (prop: keyof IAnimal) => (event: React.ChangeEvent<HTMLInputElement | any>) => {
@@ -41,13 +42,17 @@ export default function AddAnimal() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        try {
-            AnimalService.addAnimalToCollection(newAnimal).then(() => {
-                toast.success("Animal is added successfully")
-                history.push("/animals")
-            })
-        } catch (error) {
-            toast.error(error);
+        if (!CheckIfAllObjectPropsAreFilled(newAnimal, ["id"])) {
+            toast.error("Fill all required fields. The required fields have '*' in the end")
+        } else {
+            try {
+                AnimalService.addAnimalToCollection(newAnimal).then(() => {
+                    toast.success("Animal is added successfully")
+                    history.push("/animals")
+                })
+            } catch (error) {
+                toast.error(error);
+            }
         }
     };
 
@@ -55,7 +60,7 @@ export default function AddAnimal() {
         <form className="add-animal-form" noValidate autoComplete="off">
             <h2> Add animal </h2>
             <FormControl className="add-animal-field">
-                <InputLabel>Type</InputLabel>
+                <InputLabel>Type *</InputLabel>
                 <Select
                     value={newAnimal.type}
                     name="type"
@@ -69,7 +74,7 @@ export default function AddAnimal() {
                 </Select>
             </FormControl>
             <FormControl className="add-animal-field">
-                <InputLabel>Location</InputLabel>
+                <InputLabel>Location * </InputLabel>
                 <Select
                     value={newAnimal.currentLocation}
                     name="type"
@@ -85,12 +90,14 @@ export default function AddAnimal() {
                 </Select>
             </FormControl>
             <TextField
+                required
                 label="Name"
                 onChange={handleChange("name")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
             />
             <TextField
+                required
                 label="Age"
                 onChange={handleChange("age")}
                 onKeyPress={handleEnterSubmit}
@@ -98,6 +105,7 @@ export default function AddAnimal() {
                 type="number"
             />
             <TextField
+                required
                 label="Weight"
                 onChange={handleChange("weight")}
                 onKeyPress={handleEnterSubmit}
@@ -105,11 +113,12 @@ export default function AddAnimal() {
                 type="number"
             />
             <FormControl className="add-animal-field">
-                <InputLabel>Color</InputLabel>
+                <InputLabel>Color *</InputLabel>
                 <Select
                     value={newAnimal.color}
                     name="type"
                     onChange={handleChange("color")}
+                    required
                 >
                     <MenuItem value="">All</MenuItem>
                     <MenuItem value={"red"}>Red</MenuItem>
@@ -126,6 +135,7 @@ export default function AddAnimal() {
                 required
             />
             <TextField
+                required
                 label="Description"
                 onChange={handleChange("description")}
                 onKeyPress={handleEnterSubmit}

@@ -6,7 +6,7 @@ import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/Valida
 import { INormalUser } from "../../../models/INormalUser";
 import { AuthService } from "../../../helpers/AuthService";
 import { useHistory } from "react-router";
-import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function NormalUserRegisterForm() {
   const [repassword, setRepassword] = useState("");
@@ -19,8 +19,9 @@ export default function NormalUserRegisterForm() {
     password: "",
     firstName: "",
     lastName: "",
-    profileImageUrl: "",
-    role: "normal"
+    role: "normal",
+    phone: "",
+    applicationsForAdoption: []
   });
 
   const handleChange = (prop: keyof INormalUser) => (
@@ -47,13 +48,17 @@ export default function NormalUserRegisterForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!passwordErrorText && !emailErrorText) {
-      try {
-        await signup(normalUser.email, normalUser.password);
-        await AuthService.addNormalUserToCollection(normalUser);
-        toast.success("Successfully registered");
-        history.push("/");
-      } catch (error) {
-        toast.error(error?.message);
+      if (!CheckIfAllObjectPropsAreFilled(normalUser, [])) {
+        toast.error("Fill all required fields. The required fields have '*' in the end")
+      } else {
+        try {
+          await signup(normalUser.email, normalUser.password);
+          await AuthService.addNormalUserToCollection(normalUser);
+          toast.success("Successfully registered");
+          history.push("/");
+        } catch (error) {
+          toast.error(error?.message);
+        }
       }
     }
   };
@@ -61,6 +66,7 @@ export default function NormalUserRegisterForm() {
   return (
     <form className="register-form" noValidate autoComplete="off">
       <TextField
+        required
         label="Email"
         value={normalUser.email}
         onChange={handleChange("email")}
@@ -69,18 +75,21 @@ export default function NormalUserRegisterForm() {
         error={!!emailErrorText}
       />
       <TextField
+        required
         label="First name"
         value={normalUser.firstName}
         onChange={handleChange("firstName")}
         onKeyPress={handleEnterSubmit}
       />
       <TextField
+        required
         label="Last name"
         value={normalUser.lastName}
         onChange={handleChange("lastName")}
         onKeyPress={handleEnterSubmit}
       />
       <TextField
+        required
         type="password"
         label="Password"
         value={normalUser.password}
@@ -90,12 +99,20 @@ export default function NormalUserRegisterForm() {
         error={!!passwordErrorText}
       />
       <TextField
+        required
         type="password"
         label="Re-password"
         value={repassword}
         onChange={checkRepassword}
         onKeyPress={handleEnterSubmit}
         />
+        <TextField
+        required
+        label="Phone"
+        value={normalUser.phone}
+        onChange={handleChange("phone")}
+        onKeyPress={handleEnterSubmit}
+      />
         {/* endIcon={<Icon>send</Icon>} */}
       <Button variant="contained" color="primary" onClick={handleSubmit}> Send </Button>
     </form>

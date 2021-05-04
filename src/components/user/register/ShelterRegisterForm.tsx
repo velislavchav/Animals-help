@@ -6,7 +6,7 @@ import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/Valida
 import { IShelter } from "../../../models/IShelter";
 import { AuthService } from "../../../helpers/AuthService";
 import { useHistory } from "react-router";
-import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
 export default function ShelterRegisterForm() {
   const [repassword, setRepassword] = useState("");
@@ -18,10 +18,10 @@ export default function ShelterRegisterForm() {
     email: "",
     password: "",
     name: "",
-    profileImageUrl: "",
     role: "shelter",
     address: "",
-    vatNr: ""
+    vatNr: "",
+    phone: ""
   });
 
   const handleChange = (prop: keyof IShelter) => (
@@ -48,13 +48,17 @@ export default function ShelterRegisterForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!passwordErrorText && !emailErrorText) {
-      try {
-        await signup(shelter.email, shelter.password);
-        await AuthService.addShelterToCollection(shelter);
-        toast.success("Successfully registered");
-        history.push("/");
-      } catch (error) {
-        toast.error(error?.message);
+      if (!CheckIfAllObjectPropsAreFilled(shelter, [])) {
+        toast.error("Fill all required fields. The required fields have '*' in the end")
+      } else {
+        try {
+          await signup(shelter.email, shelter.password);
+          await AuthService.addShelterToCollection(shelter);
+          toast.success("Successfully registered");
+          history.push("/");
+        } catch (error) {
+          toast.error(error?.message);
+        }
       }
     }
   };
@@ -62,6 +66,7 @@ export default function ShelterRegisterForm() {
   return (
     <form className="register-form" noValidate autoComplete="off">
       <TextField
+        required
         label="Email"
         value={shelter.email}
         onChange={handleChange("email")}
@@ -70,12 +75,14 @@ export default function ShelterRegisterForm() {
         error={!!emailErrorText}
       />
       <TextField
+        required
         label="Name"
         value={shelter.name}
         onChange={handleChange("name")}
         onKeyPress={handleEnterSubmit}
       />
       <TextField
+        required
         type="password"
         label="Password"
         value={shelter.password}
@@ -85,6 +92,7 @@ export default function ShelterRegisterForm() {
         error={!!passwordErrorText}
       />
       <TextField
+        required
         type="password"
         label="Re-password"
         value={repassword}
@@ -92,15 +100,24 @@ export default function ShelterRegisterForm() {
         onKeyPress={handleEnterSubmit}
       />
       <TextField
+        required
         label="Address"
         value={shelter.address}
         onChange={handleChange("address")}
         onKeyPress={handleEnterSubmit}
       />
       <TextField
+        required
         label="VAT Number"
         value={shelter.vatNr}
         onChange={handleChange("vatNr")}
+        onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        required
+        label="Phone"
+        value={shelter.phone}
+        onChange={handleChange("phone")}
         onKeyPress={handleEnterSubmit}
       />
       {/* endIcon={<Icon>send</Icon>} */}

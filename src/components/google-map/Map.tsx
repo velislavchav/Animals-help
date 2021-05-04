@@ -7,9 +7,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import "./Map.scss"
 import { formatFullDate } from '../../helpers/GeneralHelper';
 import { IMapSignalType } from '../../models/IMapSignalType';
-// import { formatRelative } from "date-fns";
-// import { usePlacesAutocomplete, getGeocode, getLatLng } from "use-places-autocomplete";
-// import {  } from "@reach";
+
 declare global {
     interface Window {
         google: any;
@@ -27,6 +25,30 @@ const center = {
 const options = {
     disableDefaultUI: true,
     zoomControl: true
+}
+
+const getMarkerIcon = (markerSignalType: IMapSignalType): string => {
+    if (markerSignalType.isInjured && markerSignalType.isLost) {
+        return "/icons/pawprint.png";
+    } else if (markerSignalType.isInjured) {
+        return "/icons/injured-animal.png";
+    } else if (markerSignalType.isLost) {
+        return "/icons/wanted-animal.png";
+    }
+
+    return "/icons/pawprint.png";
+}
+
+const getMarkerTitle = (markerSignalType: IMapSignalType): string => {
+    if (markerSignalType.isInjured && markerSignalType.isLost) {
+        return "Lost and injured animal";
+    } else if (markerSignalType.isInjured) {
+        return "Injured animal";
+    } else if (markerSignalType.isLost) {
+        return "Lost animal";
+    }
+
+    return "Injured animal";
 }
 
 export default function Map() {
@@ -48,11 +70,7 @@ export default function Map() {
             lat: event.latLng.lat(),
             lng: event.latLng.lng(),
             time: new Date(),
-            title: "Injured animal",
-            signal: {
-                isInjured: true,
-                isLost: true
-            }
+            signalType: { ...selectedSignalType }
         }
         setMarkers([...markers, newMarker])
     }
@@ -91,20 +109,17 @@ export default function Map() {
                     <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={center} options={options} onClick={handleMapClick} onLoad={onMapLoad}>
                         {markers.map(marker => {
                             return <Marker key={marker.time.toISOString()}
-                                title={'The marker`s title will appear as a tooltip.'}
+                                title={getMarkerTitle(marker.signalType)}
                                 position={{ lat: marker.lat, lng: marker.lng }}
-                                icon={{ url: "/icons/pawprint.png", scaledSize: new window.google.maps.Size(30, 30), origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15) }}
+                                icon={{ url: getMarkerIcon(marker.signalType), scaledSize: new window.google.maps.Size(30, 30), origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15) }}
                                 onClick={() => setSelectedMarker(marker)} />
                         })}
                         {selectedMarker ? <InfoWindow position={{ lat: selectedMarker?.lat, lng: selectedMarker?.lng }} onCloseClick={() => setSelectedMarker(null)}><article>
-                            <h2>Injured animal spotted!</h2>
+                            <h2>{getMarkerTitle(selectedMarker.signalType)} spotted!</h2>
                             <p> Spotted at {formatFullDate(selectedMarker?.time)}</p>
                         </article></InfoWindow> : null}
                     </GoogleMap>
                 </section> : ""}
-
-
-            {/* icon={{url: "pawprint.png", scaledSize: new window.google.maps.Size(30, 30), origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15)}} */}
         </div>
     )
 }
@@ -117,10 +132,10 @@ function LocateMe({ panTo }: any) {
     }}><img src="/icons/map.png" alt="Locate me" /></button>
 }
 
-function SignalsType({ changeSignalType }: any, props: IMapSignalType) {
+function SignalsType({ changeSignalType, isInjured, isLost }: any) {
     return <ButtonGroup className="signals-type-holder" variant="contained" color="primary" aria-label="contained primary button group">
-        <Button className={props.isInjured && !props.isLost ? "active" : ""} onClick={() => changeSignalType("injured")}>Injured animal</Button>
-        <Button className={!props.isInjured && props.isLost ? "active" : ""} onClick={() => changeSignalType("lost")}>Lost animal</Button>
-        <Button className={props.isInjured && props.isLost ? "active" : ""} onClick={() => changeSignalType("both")}>Both</Button>
+        <Button className={isInjured && !isLost ? "active" : ""} onClick={() => changeSignalType("injured")}> Injured animal </Button>
+        <Button className={!isInjured && isLost ? "active" : ""} onClick={() => changeSignalType("lost")}> Lost animal </Button>
+        <Button className={isInjured && isLost ? "active" : ""} onClick={() => changeSignalType("both")}> Both </Button>
     </ButtonGroup>
 }

@@ -4,6 +4,5 @@ export interface IMapMarker {
     lat: number,
     lng: number,
     time: Date,
-    title: string,
-    signal: IMapSignalType
+    signalType: IMapSignalType
 }

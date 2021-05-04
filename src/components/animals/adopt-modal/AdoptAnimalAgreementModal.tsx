@@ -5,10 +5,18 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { toast } from 'react-toastify';
+import { IAnimal } from '../../../models/IAnimal';
+import { AnimalService } from '../../../helpers/AnimalService';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useHistory } from 'react-router';
+import { AuthService } from '../../../helpers/AuthService';
+import { INormalUser } from '../../../models/INormalUser';
 
-export default function AdoptAnimalAgreementModal() {
+export default function AdoptAnimalAgreementModal(props: IAnimal) {
   const [openAdoptAnimal, setOpenAdoptAnimal] = useState(false);
-
+  const history = useHistory();
+  const { currentUser } = useAuth();
   const handleClickOpenAdoptModal = () => {
     setOpenAdoptAnimal(true);
   };
@@ -16,11 +24,40 @@ export default function AdoptAnimalAgreementModal() {
   const handleClickCloseAdoptModal = () => {
     setOpenAdoptAnimal(false);
   };
+
+  const handleApplyForAdoptionAgreement = () => {
+    try {
+      let unsubscribe = AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
+        AuthService.addApplicationForAdoption(currentUser as INormalUser, props?.id)
+      }).then(() => {      
+        setOpenAdoptAnimal(false);
+        toast.success("You have successfully made request for adopting!");
+        history.push("/animals");
+      })
+    } catch (error) {
+      toast.error("Something went wrong with the request for adopting!");
+    }
+  }
+
+  const removeUserAdoptionApplication = () => {
+    try {
+      let unsubscribe = AnimalService.removeUserApplicationForAdoption(currentUser?.email, props).then(() => {
+        AuthService.removeApplicationForAdoption(currentUser as INormalUser, props?.id)
+      }).then(() => {
+        history.push("/animals");
+        toast.success("You have successfully removed your request for adopting!");
+        setOpenAdoptAnimal(false);
+      })
+    } catch (error) {
+      toast.error("Something went wrong with removing the request for adopting!");
+    }
+  }
+
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpenAdoptModal}>
-        Adopt this animal
-      </Button>
+      {!props.usersAppliedForAdoption.includes(currentUser.email) ?
+        <Button variant="outlined" color="primary" onClick={handleClickOpenAdoptModal}> Apply for adoption </Button> :
+        <Button variant="outlined" color="secondary" onClick={removeUserAdoptionApplication}> Cancel the adoption application </Button>}
       <Dialog
         open={openAdoptAnimal}
         onClose={handleClickCloseAdoptModal}
@@ -37,7 +74,7 @@ export default function AdoptAnimalAgreementModal() {
           <Button onClick={handleClickCloseAdoptModal} color="primary">
             Disagree
           </Button>
-          <Button onClick={handleClickCloseAdoptModal} color="primary" autoFocus>
+          <Button onClick={handleApplyForAdoptionAgreement} color="primary" autoFocus>
             Agree
           </Button>
         </DialogActions>

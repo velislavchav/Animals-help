@@ -24,6 +24,10 @@ body {
   box-sizing: border-box;
 }
 
+.MuiToolbar-regular {  // making header 64px on all devices
+  height: 64px;
+}
+
 .disp-none {
   display: none !important;
 }

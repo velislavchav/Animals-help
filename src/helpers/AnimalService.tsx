@@ -47,5 +47,18 @@ export const AnimalService = {
                 return animals;
             } catch (error) { console.log(error) }
         }
-    }
+    },
+    addUserApplicationForAdoption(userEmail: string, animal: IAnimal): Promise<any> {
+        const updatedApplicationsArray: string[] = [...(animal?.usersAppliedForAdoption as string[]), userEmail];
+        return collectionReference.doc(animal.id).update({ usersAppliedForAdoption: updatedApplicationsArray })
+    },
+    removeUserApplicationForAdoption(userEmail: string, animal: IAnimal): Promise<any> {
+        let updatedApplicationsArray = [...animal.usersAppliedForAdoption];
+        const applicationIndexForRemoving = updatedApplicationsArray.findIndex(el => el === userEmail);
+        if (applicationIndexForRemoving >= 0) updatedApplicationsArray.splice(applicationIndexForRemoving, 1)
+        return collectionReference.doc(animal.id).update({ ...animal, usersAppliedForAdoption: updatedApplicationsArray })
+    },
+    deleteAnimal(animalId: string): Promise<any> {
+        return collectionReference.doc(animalId).delete()
+    },
 }

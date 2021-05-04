@@ -6,9 +6,22 @@ const CheckIfStringIsEmpty = (stringForCheck: string) => {
         true : false
 }
 
-const CheckIfObjectValuesAreEmpty = (object: Object) => {
+const CheckIfObjectHasAnyValues = (object: Object) => {
     const notEmptyObjectValues = Object.values(object).filter(objValue => !CheckIfStringIsEmpty(objValue as string));
-    return notEmptyObjectValues?.length > 0 ? false : true;
+    return notEmptyObjectValues?.length > 0 ? true : false;
+}
+
+const CheckIfAllObjectPropsAreFilled = (objectToCheck: any, doNotCheckKeys: string[]) => {
+    let areFilled: boolean = true;
+    Object.keys(objectToCheck).forEach((objKey: string) => {
+        if(typeof (objectToCheck[objKey]) !== "object" && !doNotCheckKeys.includes(objKey)) {
+            areFilled = !CheckIfStringIsEmpty(objectToCheck[objKey].toString())
+            if (areFilled === false) {
+                return false;
+            }
+        }
+    })
+    return areFilled;
 }
 
 const CheckIsEnterPressed = (event: any) => {
@@ -35,8 +48,9 @@ const formatFullDate = (date: Date) => {
 
 export {
     CheckIfStringIsEmpty,
-    CheckIfObjectValuesAreEmpty,
+    CheckIfObjectHasAnyValues,
+    CheckIfAllObjectPropsAreFilled,
     CheckIsEnterPressed,
     IsTheUserHasAccess,
-    formatFullDate
+    formatFullDate,
 };

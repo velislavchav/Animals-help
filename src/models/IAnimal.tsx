@@ -11,4 +11,5 @@ export interface IAnimal {
     createdBy?: string;
     creator?: string;
     createdAt?: Date;
+    usersAppliedForAdoption: string[];
 }

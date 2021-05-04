@@ -2,6 +2,14 @@
   position: fixed;
   flex-grow: 1;
 
+  #mobile-navigation {
+    display: none;
+  }
+
+  #desktop-navigation {
+    display: flex;
+  }
+
   .menu-button {
     margin-right: 16px;
     color: inherit;
@@ -22,12 +30,26 @@
 
 @media only screen and (max-width: 768px) {
   #main-navigation {
+    #mobile-navigation {
+      display: flex;
+      flex-direction: column;
+      // height: 100vh;
+
+      a {
+        height: 48px;
+      }
+    }
+
+    #desktop-navigation {
+      display: none;
+    }
+
     .menu-button {
       display: inline-flex;
     }
 
-    a:not(.menu-button) {
-        display: none;
-      }
+    // a:not(.menu-button) {
+    //     display: none;
+    //   }
   }
 }

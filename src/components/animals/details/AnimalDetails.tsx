@@ -5,7 +5,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-// import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { AnimalService } from "../../../helpers/AnimalService";
 import { Link } from 'react-router-dom';
@@ -13,6 +12,8 @@ import { useAuth } from "../../../contexts/AuthContext";
 import "./AnimalDetails.scss";
 import { IAnimal } from "../../../models/IAnimal";
 import AdoptAnimalAgreementModal from "../adopt-modal/AdoptAnimalAgreementModal";
+import DeleteAnimalModal from "../delete/DeleteAnimalModal";
+
 import { IsTheUserHasAccess } from "../../../helpers/GeneralHelper";
 
 export default function AnimalDetails(props: any) {
@@ -28,6 +29,7 @@ export default function AnimalDetails(props: any) {
     image: "",
     currentLocation: "",
     description: "",
+    usersAppliedForAdoption: []
   })
 
   useEffect((): any => {
@@ -48,7 +50,8 @@ export default function AnimalDetails(props: any) {
     <section id="animal-details-container">
       <div className="animal-details-top-buttons-container">
         <Button color="inherit" component={Link} to={'/animals'}>Back to all animals</Button>
-        {IsTheUserHasAccess(currentUser, ["normal"]) ? <AdoptAnimalAgreementModal /> : ""}
+        {IsTheUserHasAccess(currentUser, ["normal"]) ? <AdoptAnimalAgreementModal {...animal} /> : ""}
+        {IsTheUserHasAccess(currentUser, ["shelter"]) ? <DeleteAnimalModal {...animal} /> : ""}
       </div>
       <Paper
         elevation={3}
@@ -65,12 +68,6 @@ export default function AnimalDetails(props: any) {
       </Paper>
       <TableContainer className="animal-details-table" component={Paper}>
         <Table aria-label="simple table">
-          {/* <TableHead>
-            <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell align="right">Values</TableCell>
-            </TableRow>
-          </TableHead> */}
           <TableBody>
             <TableRow key="Type">
               <TableCell component="th" scope="row"> Type </TableCell>

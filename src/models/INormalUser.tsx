@@ -3,7 +3,9 @@ export interface INormalUser {
   password?: string;
   firstName: string;
   lastName: string;
-  profileImageUrl: string;
+  // profileImageUrl: string;
   role: string;
   createdAt?: Date;
+  phone: string;
+  applicationsForAdoption: string[];
 }
