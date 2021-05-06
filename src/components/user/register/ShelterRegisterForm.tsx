@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/AuthContext";
 import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
 import { IShelter } from "../../../models/IShelter";
-import { AuthService } from "../../../helpers/AuthService";
+import { UserService } from "../../../helpers/services/UserService";
 import { useHistory } from "react-router";
 import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
@@ -21,7 +21,8 @@ export default function ShelterRegisterForm() {
     role: "shelter",
     address: "",
     vatNr: "",
-    phone: ""
+    phone: "",
+    imageUrl: ""
   });
 
   const handleChange = (prop: keyof IShelter) => (
@@ -48,12 +49,12 @@ export default function ShelterRegisterForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!passwordErrorText && !emailErrorText) {
-      if (!CheckIfAllObjectPropsAreFilled(shelter, [])) {
+      if (!CheckIfAllObjectPropsAreFilled(shelter, ["imageUrl", "description"])) {
         toast.error("Fill all required fields. The required fields have '*' in the end")
       } else {
         try {
           await signup(shelter.email, shelter.password);
-          await AuthService.addShelterToCollection(shelter);
+          await UserService.addShelterToCollection(shelter);
           toast.success("Successfully registered");
           history.push("/");
         } catch (error) {
@@ -101,7 +102,7 @@ export default function ShelterRegisterForm() {
       />
       <TextField
         required
-        label="Address"
+        label="Address (country, town, street, house number)"
         value={shelter.address}
         onChange={handleChange("address")}
         onKeyPress={handleEnterSubmit}
@@ -119,6 +120,18 @@ export default function ShelterRegisterForm() {
         value={shelter.phone}
         onChange={handleChange("phone")}
         onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        label="Image url address"
+        value={shelter.imageUrl}
+        onChange={handleChange("imageUrl")}
+        onKeyPress={handleEnterSubmit}
+      />
+      <TextField
+        multiline
+        label="Description"
+        value={shelter.description}
+        onChange={handleChange("description")}
       />
       {/* endIcon={<Icon>send</Icon>} */}
       <Button variant="contained" color="primary" onClick={handleSubmit}> Send </Button>

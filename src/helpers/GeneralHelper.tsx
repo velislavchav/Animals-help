@@ -1,3 +1,5 @@
+import { IMapSignalType } from "../models/IMapSignalType";
+
 const CheckIfStringIsEmpty = (stringForCheck: string) => {
     return stringForCheck?.trim().length === 0 ||
         stringForCheck === "" ||
@@ -14,7 +16,7 @@ const CheckIfObjectHasAnyValues = (object: Object) => {
 const CheckIfAllObjectPropsAreFilled = (objectToCheck: any, doNotCheckKeys: string[]) => {
     let areFilled: boolean = true;
     Object.keys(objectToCheck).forEach((objKey: string) => {
-        if(typeof (objectToCheck[objKey]) !== "object" && !doNotCheckKeys.includes(objKey)) {
+        if (typeof (objectToCheck[objKey]) !== "object" && !doNotCheckKeys.includes(objKey)) {
             areFilled = !CheckIfStringIsEmpty(objectToCheck[objKey].toString())
             if (areFilled === false) {
                 return false;
@@ -35,7 +37,10 @@ const IsTheUserHasAccess = (user: any, accessRoles: string[]) => {
     return false
 }
 
-const formatFullDate = (date: Date) => {
+const formatFullDate = (date: any) => {
+    try {
+        date = date?.toDate()  
+    } catch {}
     const DD = ("0" + date.getDate()).slice(-2);
     const MM = ("0" + (date.getMonth() + 1)).slice(-2);
     const YYYY = date.getFullYear();
@@ -46,6 +51,30 @@ const formatFullDate = (date: Date) => {
     return date_string;
 }
 
+const getMarkerIcon = (markerSignalType: IMapSignalType): string => {
+    if (markerSignalType.isInjured && markerSignalType.isLost) {
+        return "/icons/pawprint.png";
+    } else if (markerSignalType.isInjured) {
+        return "/icons/injured-animal.png";
+    } else if (markerSignalType.isLost) {
+        return "/icons/wanted-animal.png";
+    }
+
+    return "/icons/pawprint.png";
+}
+
+const getMarkerTitle = (markerSignalType: IMapSignalType): string => {
+    if (markerSignalType.isInjured && markerSignalType.isLost) {
+        return "Lost and injured animal";
+    } else if (markerSignalType.isInjured) {
+        return "Injured animal";
+    } else if (markerSignalType.isLost) {
+        return "Lost animal";
+    }
+
+    return "Injured animal";
+}
+
 export {
     CheckIfStringIsEmpty,
     CheckIfObjectHasAnyValues,
@@ -53,4 +82,6 @@ export {
     CheckIsEnterPressed,
     IsTheUserHasAccess,
     formatFullDate,
+    getMarkerIcon,
+    getMarkerTitle
 };

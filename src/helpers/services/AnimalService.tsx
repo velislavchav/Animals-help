@@ -1,8 +1,8 @@
 import 'firebase/firestore';
-import firebase, { firebaseTimestamp } from '../firebase'
-import { IAnimal } from '../models/IAnimal';
-import IAnimalFilters from '../models/IAnimalFilters';
-import { CheckIfStringIsEmpty } from './GeneralHelper';
+import firebase, { firebaseTimestamp } from '../../firebase'
+import { IAnimal } from '../../models/IAnimal';
+import IAnimalFilters from '../../models/IAnimalFilters';
+import { CheckIfStringIsEmpty } from '../GeneralHelper';
 
 const db = firebase.firestore();
 const collectionReference = db.collection("animals");
@@ -15,14 +15,14 @@ export const AnimalService = {
             return ref.set({ ...animal, id: myId, createdAt: firebaseTimestamp })
         } catch { }
     },
-    async getAllAnimals(): Promise<any> {
-        const markers: IAnimal[] = [];
+    async getAllAnimals(): Promise<IAnimal[]> {
+        const animals: IAnimal[] = [];
         await collectionReference.get().then(querySnapshot => {
             querySnapshot.docs.forEach(doc => {
-                markers.push(doc.data() as IAnimal);
+                animals.push(doc.data() as IAnimal);
             });
         }).catch()
-        return markers;
+        return animals;
     },
     getAnimal(animalId: string): Promise<any> {
         return collectionReference.doc(animalId).get();

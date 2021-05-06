@@ -1,4 +1,4 @@
-export interface IShelter {
+export interface IInstitute {
     email: string;
     password?: string;
     name: string;
@@ -7,6 +7,6 @@ export interface IShelter {
     address: string;
     vatNr: string;
     phone: string;
-    imageUrl?: string;
-    description?: string;
-}
+    imageUrl: string;
+  }
+  

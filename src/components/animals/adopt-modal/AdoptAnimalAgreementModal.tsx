@@ -7,10 +7,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { toast } from 'react-toastify';
 import { IAnimal } from '../../../models/IAnimal';
-import { AnimalService } from '../../../helpers/AnimalService';
+import { AnimalService } from '../../../helpers/services/AnimalService';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useHistory } from 'react-router';
-import { AuthService } from '../../../helpers/AuthService';
+import { UserService } from '../../../helpers/services/UserService';
 import { INormalUser } from '../../../models/INormalUser';
 
 export default function AdoptAnimalAgreementModal(props: IAnimal) {
@@ -27,8 +27,8 @@ export default function AdoptAnimalAgreementModal(props: IAnimal) {
 
   const handleApplyForAdoptionAgreement = () => {
     try {
-      let unsubscribe = AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
-        AuthService.addApplicationForAdoption(currentUser as INormalUser, props?.id)
+      AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
+        UserService.addApplicationForAdoption(currentUser as INormalUser, props?.id)
       }).then(() => {      
         setOpenAdoptAnimal(false);
         toast.success("You have successfully made request for adopting!");
@@ -41,8 +41,8 @@ export default function AdoptAnimalAgreementModal(props: IAnimal) {
 
   const removeUserAdoptionApplication = () => {
     try {
-      let unsubscribe = AnimalService.removeUserApplicationForAdoption(currentUser?.email, props).then(() => {
-        AuthService.removeApplicationForAdoption(currentUser as INormalUser, props?.id)
+      AnimalService.removeUserApplicationForAdoption(currentUser?.email, props).then(() => {
+        UserService.removeApplicationForAdoption(currentUser as INormalUser, props?.id)
       }).then(() => {
         history.push("/animals");
         toast.success("You have successfully removed your request for adopting!");

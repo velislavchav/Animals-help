@@ -7,8 +7,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { IAnimal } from '../../../models/IAnimal';
 import { useHistory } from 'react-router';
-import { AuthService } from '../../../helpers/AuthService';
-import { AnimalService } from '../../../helpers/AnimalService';
+import { UserService } from '../../../helpers/services/UserService';
+import { AnimalService } from '../../../helpers/services/AnimalService';
 import { toast } from 'react-toastify';
 
 export default function DeleteAnimalModal(props: IAnimal) {
@@ -24,8 +24,8 @@ export default function DeleteAnimalModal(props: IAnimal) {
 
   const handleDeleteAnimal = () => {
     try {
-      let unsubscribe = AnimalService.deleteAnimal(props.id).then(() => {
-        AuthService.removeDeletedAnimalApplicationsFromAllUsers(props.id)
+      AnimalService.deleteAnimal(props.id).then(() => {
+        UserService.removeDeletedAnimalApplicationsFromAllUsers(props.id)
       }).then(() => {      
         setOpenAdoptAnimal(false);
         toast.success("You have successfully removed the animal!");

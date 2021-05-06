@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans&display=swap");
+$imageContainerHeight: 960px;
+$titleColor: #023c5a;
+
+#home-page {
+    background-image: url(./homebackground.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    height: $imageContainerHeight;
+
+    .home-page-image-left-text {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 100px;
+        top: 13vh;
+        text-align: center;
+
+        h2 {
+            font-family: "Fredoka One", cursive;
+            font-size: 70px;
+            font-weight: 400;
+            color: $titleColor;
+            margin-bottom: 10px;
+        }
+
+        .animal-quote {
+            display: block;
+            font-family: "DM Sans", sans-serif;
+            color: $titleColor;
+            font-size: 16px;
+            line-height: 30px;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .go-to-map-button {
+            width: 100%;
+            min-height: 48px;
+
+            &:hover {
+                background-color: #11217e;
+                color: #eef9ff;
+            }
+        }
+    }
+}
+
+#home-page-advantages {
+    position: absolute;
+    top: $imageContainerHeight + 100px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    justify-content: center;
+    align-items: flex-start;
+
+    h3 {
+        font-family: "Fredoka One", cursive;
+        color: $titleColor;
+        font-size: 44px;
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    .advantage-container {
+        margin: 25px 0 100px 0;
+        display: flex;
+        flex-wrap: wrap;
+        flex-basis: 28%;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            flex-basis: 85%;
+            text-align: center;
+        }
+
+        p {
+            flex-basis: 85%;
+            text-align: justify;
+        }
+
+        h4 {
+            flex-basis: 85%;
+            text-align: center;
+            font-family: "DM Sans", sans-serif;
+            color: $titleColor;
+            font-size: 22px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #home-page {
+        background-position: left center;
+
+        .home-page-image-left-text {
+            position: static;
+            margin-top: 8vh;
+
+            h2 {
+                font-size: 33px;
+            }
+
+            .animal-quote {
+                margin: 15px 0;
+                font-size: 12px;
+            }
+
+            .go-to-map-button {
+                margin-top: 15px;
+                width: 90%;
+                min-height: 48px;
+            }
+        }
+    }
+
+    #home-page-advantages {
+        position: absolute;
+        top: $imageContainerHeight - 525px;
+
+        h3 {
+            font-family: "Fredoka One", cursive;
+            color: $titleColor;
+            font-size: 26px;
+            flex-basis: 100%;
+            text-align: center;
+        }
+
+        .advantage-container {
+            margin: 0 0 35px 0;
+            flex-basis: 100%;
+
+            * {
+                flex-basis: 100%;
+                margin: 5px 0;
+            }
+        }
+    }
+}

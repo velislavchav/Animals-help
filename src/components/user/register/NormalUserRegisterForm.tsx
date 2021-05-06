@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/AuthContext";
 import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
 import { INormalUser } from "../../../models/INormalUser";
-import { AuthService } from "../../../helpers/AuthService";
+import { UserService } from "../../../helpers/services/UserService";
 import { useHistory } from "react-router";
 import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 
@@ -53,7 +53,7 @@ export default function NormalUserRegisterForm() {
       } else {
         try {
           await signup(normalUser.email, normalUser.password);
-          await AuthService.addNormalUserToCollection(normalUser);
+          await UserService.addNormalUserToCollection(normalUser);
           toast.success("Successfully registered");
           history.push("/");
         } catch (error) {

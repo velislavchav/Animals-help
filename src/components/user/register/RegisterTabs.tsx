@@ -30,7 +30,7 @@ export default function RegisterTabs() {
       >
         <Tab icon={<AccountCircleIcon />} label="Normal" />
         <Tab icon={<HomeWorkIcon />} label="Shelters" />
-        <Tab icon={<BusinessIcon />} label="Institute" />
+        <Tab icon={<BusinessIcon />} label="Institution" />
       </Tabs>
       {value === 0 ? <NormalUserRegisterForm/> : "" }
       {value === 1 ? <ShelterRegisterForm/> : "" }

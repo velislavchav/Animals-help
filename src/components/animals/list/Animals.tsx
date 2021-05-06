@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { AnimalService } from "../../../helpers/AnimalService";
+import { AnimalService } from "../../../helpers/services/AnimalService";
 import { IAnimal } from "../../../models/IAnimal";
 import AnimalCard from "./list-card/AnimalCard";
 import AnimalsFilters from "./list-filters/AnimalsFilter";

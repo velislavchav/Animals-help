@@ -1,12 +1,16 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { IMapMarker } from '../../models/IMapMarker';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import "./Map.scss"
-import { formatFullDate } from '../../helpers/GeneralHelper';
+import { formatFullDate, getMarkerIcon, getMarkerTitle, IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 import { IMapSignalType } from '../../models/IMapSignalType';
+import { GoogleMapService } from '../../helpers/services/GoogleMapService';
+import { toast } from 'react-toastify';
+import MapConfirmationModal from './MapConfirmationModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 declare global {
     interface Window {
@@ -27,52 +31,59 @@ const options = {
     zoomControl: true
 }
 
-const getMarkerIcon = (markerSignalType: IMapSignalType): string => {
-    if (markerSignalType.isInjured && markerSignalType.isLost) {
-        return "/icons/pawprint.png";
-    } else if (markerSignalType.isInjured) {
-        return "/icons/injured-animal.png";
-    } else if (markerSignalType.isLost) {
-        return "/icons/wanted-animal.png";
-    }
-
-    return "/icons/pawprint.png";
-}
-
-const getMarkerTitle = (markerSignalType: IMapSignalType): string => {
-    if (markerSignalType.isInjured && markerSignalType.isLost) {
-        return "Lost and injured animal";
-    } else if (markerSignalType.isInjured) {
-        return "Injured animal";
-    } else if (markerSignalType.isLost) {
-        return "Lost animal";
-    }
-
-    return "Injured animal";
-}
 
 export default function Map() {
     const { isLoaded, loadError } = useLoadScript({
-        // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        googleMapsApiKey: "",
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string,
+        // googleMapsApiKey: "AIzaSyBcbWTCbBXewywPj87g4ImTRihumM7mNd4",
         libraries
     })
-
+    const { currentUser } = useAuth();
     const [markers, setMarkers] = useState<IMapMarker[]>([])
+    const [newMarker, setNewMarker] = useState<IMapMarker>()
     const [selectedMarker, setSelectedMarker] = useState<IMapMarker | null>(null)
     const [selectedSignalType, setSelectedSignalType] = useState<IMapSignalType>({
         isInjured: true,
         isLost: false
     })
-
-    const handleMapClick = (event: any) => {
-        const newMarker: IMapMarker = {
+    const [mapConfirmationSubmission, setMapConfirmationSubmission] = useState(false);
+    const handleClickOpenModal = (event: any) => {
+        const markerData: IMapMarker = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng(),
             time: new Date(),
             signalType: { ...selectedSignalType }
         }
-        setMarkers([...markers, newMarker])
+        setNewMarker(markerData);
+        setMapConfirmationSubmission(true);
+    };
+
+    const handleClickCloseModal = () => {
+        setMapConfirmationSubmission(false);
+    };
+
+    useEffect(() => {
+        let result: IMapMarker[] = [];
+        try {
+            GoogleMapService.getAllMarkers().then(data => {
+                data.forEach((marker: IMapMarker) => result.push(marker));
+                setMarkers(result)
+            })
+        } catch (error) {
+            toast.error("Something went wrong with fetching old markers!")
+        }
+    }, [])
+
+    const handleMapClick = (newMarker: IMapMarker) => {
+        try {
+            GoogleMapService.addMarker(newMarker).then(data => {
+                setMarkers([...markers, newMarker])
+                toast.success("Successfully added marker on the map!")
+            })
+        } catch (error) {
+            toast.error("Something went wrong!")
+        }
+        setMapConfirmationSubmission(false);
     }
 
     const changeSignalType = (type: string) => {
@@ -100,15 +111,32 @@ export default function Map() {
         mapRefAsAny?.current?.setZoom(15);
     }, [])
 
+    const deleteMarker = () => {
+        if (selectedMarker !== null) {
+            try {
+                GoogleMapService.deleteMarker(selectedMarker).then(() => {
+                    let updatedMarkersArray = [...markers];
+                    const deletedElIndex = markers.findIndex(marker => marker.lat === selectedMarker.lat && marker.lng === selectedMarker.lng);
+                    if(deletedElIndex >= 0) updatedMarkersArray.splice(deletedElIndex, 1)
+                    setMarkers(updatedMarkersArray);
+                    setSelectedMarker(null);
+                    toast.success("Successfully deleted signal!")
+                });      
+            } catch { 
+                toast.success("Something went wrong with deleting the signal!")
+            }
+        }
+    }
+
     return (
         <div>
             {!loadError && isLoaded ?
                 <section id="google-map-container">
                     <SignalsType changeSignalType={changeSignalType} {...selectedSignalType}></SignalsType>
                     <LocateMe panTo={panTo}></LocateMe>
-                    <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={center} options={options} onClick={handleMapClick} onLoad={onMapLoad}>
+                    <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={center} options={options} onClick={handleClickOpenModal} onLoad={onMapLoad}>
                         {markers.map(marker => {
-                            return <Marker key={marker.time.toISOString()}
+                            return <Marker key={marker?.time?.toString()}
                                 title={getMarkerTitle(marker.signalType)}
                                 position={{ lat: marker.lat, lng: marker.lng }}
                                 icon={{ url: getMarkerIcon(marker.signalType), scaledSize: new window.google.maps.Size(30, 30), origin: new window.google.maps.Point(0, 0), anchor: new window.google.maps.Point(15, 15) }}
@@ -117,7 +145,9 @@ export default function Map() {
                         {selectedMarker ? <InfoWindow position={{ lat: selectedMarker?.lat, lng: selectedMarker?.lng }} onCloseClick={() => setSelectedMarker(null)}><article>
                             <h2>{getMarkerTitle(selectedMarker.signalType)} spotted!</h2>
                             <p> Spotted at {formatFullDate(selectedMarker?.time)}</p>
+                            {IsTheUserHasAccess(currentUser, ["institution"]) ? <Button onClick={deleteMarker} variant="contained" color="secondary" className="delete-map-signal"> Delete this signal </Button> : <></>}
                         </article></InfoWindow> : null}
+                        <MapConfirmationModal newMarker={newMarker} mapConfirmationSubmission={mapConfirmationSubmission} handleMapClick={handleMapClick} handleClickCloseModal={handleClickCloseModal}></MapConfirmationModal>
                     </GoogleMap>
                 </section> : ""}
         </div>

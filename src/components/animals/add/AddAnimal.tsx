@@ -5,7 +5,7 @@ import { IAnimal } from "../../../models/IAnimal";
 import { toast } from "react-toastify";
 import "./AddAnimal.scss";
 import { Button, TextField } from "@material-ui/core";
-import { AnimalService } from "../../../helpers/AnimalService";
+import { AnimalService } from "../../../helpers/services/AnimalService";
 import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -98,7 +98,7 @@ export default function AddAnimal() {
             />
             <TextField
                 required
-                label="Age"
+                label="Age (years)"
                 onChange={handleChange("age")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
@@ -106,7 +106,7 @@ export default function AddAnimal() {
             />
             <TextField
                 required
-                label="Weight"
+                label="Weight (kg)"
                 onChange={handleChange("weight")}
                 onKeyPress={handleEnterSubmit}
                 className="add-animal-field"
