@@ -35,7 +35,6 @@ const options = {
 export default function Map() {
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string,
-        // googleMapsApiKey: "AIzaSyBcbWTCbBXewywPj87g4ImTRihumM7mNd4",
         libraries
     })
     const { currentUser } = useAuth();
