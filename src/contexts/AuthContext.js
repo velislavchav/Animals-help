@@ -55,9 +55,9 @@ export function AuthProvider({ children }) {
     
     fetchAllUserData();
     return unsubscribe;
-  }, []);
+  }, [loading]);
 
-  const value = { currentUser, signup, login, logout, resetPassword };
+  const value = { currentUser, signup, login, logout, resetPassword, setLoading };
 
   return (
     <AuthContext.Provider value={value}>

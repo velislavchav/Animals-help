@@ -27,6 +27,7 @@ export const UserService = {
     },
     addApplicationForAdoption(user: INormalUser, animalId: string): Promise<any> {
         const updatedApplicationsArray: string[] = [...user?.applicationsForAdoption, animalId];
+        console.log(updatedApplicationsArray)
         return collectionReference.doc(user?.email).update({ applicationsForAdoption: updatedApplicationsArray })
     },
     removeApplicationForAdoption(user: INormalUser, animalId: string): Promise<any> {
@@ -34,6 +35,17 @@ export const UserService = {
         const applicationIndexForRemoving = updatedApplicationsArray.findIndex(el => el === animalId);
         if (applicationIndexForRemoving >= 0) updatedApplicationsArray.splice(applicationIndexForRemoving, 1)
         return collectionReference.doc(user?.email).update({ applicationsForAdoption: updatedApplicationsArray })
+    },
+    removeApplicationOnMultipleUsersForAdoption(usersEmails: string[], animalId: string): Promise<any> {
+        let matchedUsers = collectionReference;
+        return matchedUsers.where("email", "in", usersEmails).get().then(querySnapshot => {
+            if (querySnapshot.size > 0) {
+                querySnapshot.forEach(user => {
+                    this.removeApplicationForAdoption(user.data() as INormalUser, animalId);
+                });
+            }
+        })
+        // return collectionReference.doc(user?.email).update({ applicationsForAdoption: updatedApplicationsArray })
     },
     removeDeletedAnimalApplicationsFromAllUsers(deletedAnimalId: string): Promise<any> {
         let matchedUsers = collectionReference;
@@ -68,5 +80,14 @@ export const UserService = {
             })
         }
         return matchedUsers;
+    },
+    async getLatestUserAdditionalData(userEmail: string) : Promise<IInstitute | INormalUser | IShelter | undefined> {
+        let result: IInstitute | INormalUser | IShelter | undefined = undefined;
+        if (userEmail) {
+            await firebase.firestore().collection("users").doc(userEmail).get().then(async doc => {
+                result = await doc.data() as any;
+            });
+        }
+        return result;
     }
 }

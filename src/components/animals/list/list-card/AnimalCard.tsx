@@ -15,7 +15,7 @@ export default class AnimalCard extends React.Component {
         <CardActionArea>
           <CardMedia
             className="animals-list-card-image"
-            image={data.image}
+            image={data?.image ? data.image : "/image-not-found.jpg"}
             title={data.name}
           />
           <CardContent>

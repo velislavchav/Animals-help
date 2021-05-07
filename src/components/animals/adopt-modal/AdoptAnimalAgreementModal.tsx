@@ -16,7 +16,7 @@ import { INormalUser } from '../../../models/INormalUser';
 export default function AdoptAnimalAgreementModal(props: IAnimal) {
   const [openAdoptAnimal, setOpenAdoptAnimal] = useState(false);
   const history = useHistory();
-  const { currentUser } = useAuth();
+  const { currentUser, setLoading } = useAuth();
   const handleClickOpenAdoptModal = () => {
     setOpenAdoptAnimal(true);
   };
@@ -27,12 +27,15 @@ export default function AdoptAnimalAgreementModal(props: IAnimal) {
 
   const handleApplyForAdoptionAgreement = () => {
     try {
-      AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
-        UserService.addApplicationForAdoption(currentUser as INormalUser, props?.id)
-      }).then(() => {      
-        setOpenAdoptAnimal(false);
-        toast.success("You have successfully made request for adopting!");
-        history.push("/animals");
+      UserService.getLatestUserAdditionalData(currentUser?.email).then(userData => {
+        AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
+          UserService.addApplicationForAdoption(userData as INormalUser, props?.id)
+        }).then(() => {      
+          setOpenAdoptAnimal(false);
+          toast.success("You have successfully made request for adopting!");
+          history.push("/animals");
+          setLoading(true)
+        })
       })
     } catch (error) {
       toast.error("Something went wrong with the request for adopting!");

@@ -17,9 +17,10 @@ const CheckIfAllObjectPropsAreFilled = (objectToCheck: any, doNotCheckKeys: stri
     let areFilled: boolean = true;
     Object.keys(objectToCheck).forEach((objKey: string) => {
         if (typeof (objectToCheck[objKey]) !== "object" && !doNotCheckKeys.includes(objKey)) {
-            areFilled = !CheckIfStringIsEmpty(objectToCheck[objKey].toString())
             if (areFilled === false) {
                 return false;
+            } else {
+                areFilled = !CheckIfStringIsEmpty(objectToCheck[objKey].toString())
             }
         }
     })

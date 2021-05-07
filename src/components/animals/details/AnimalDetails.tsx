@@ -62,7 +62,7 @@ export default function AnimalDetails(props: any) {
           className="animal-details-image-container"
         >
           <img
-            src={animal.image}
+            src={animal.image ? animal.image : "/image-not-found.jpg"}
             alt={animal.type}
             className="animal-details-image"
           />
@@ -97,7 +97,7 @@ export default function AnimalDetails(props: any) {
           {animal.description}
         </p>
       </section>
-      {IsTheUserHasAccess(currentUser, ["shelter"]) && currentUser.email === animal.creator ? <AdoptionApplicationsTable applicationsForAdoption={animal?.usersAppliedForAdoption} /> : ""}
+      {IsTheUserHasAccess(currentUser, ["shelter"]) && currentUser.email === animal.creator ? <AdoptionApplicationsTable applicationsForAdoption={animal?.usersAppliedForAdoption} animalId={animalId} /> : ""}
     </>
   );
 }

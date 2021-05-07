@@ -40,11 +40,28 @@
   }
 }
 
-.users-adopting-applications-table-title {
-  font-size: 22px;
+.adopting-table-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  flex-basis: 100%;
   margin: 35px 0 5px;
-  font-weight: 400;
-  text-align: center;
+
+  .users-adopting-applications-table-title {
+    font-size: 22px;
+    font-weight: 400;
+    text-align: center;
+    flex-grow: 2.5;
+  }
+
+  .delete-adopting-applications-btn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
 }
 
 .users-adopting-applications-table {

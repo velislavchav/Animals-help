@@ -58,6 +58,10 @@ export const AnimalService = {
         if (applicationIndexForRemoving >= 0) updatedApplicationsArray.splice(applicationIndexForRemoving, 1)
         return collectionReference.doc(animal.id).update({ ...animal, usersAppliedForAdoption: updatedApplicationsArray })
     },
+    removeMultipleUsersApplicationForAdoption(usersEmailList: string[], animalId: string, allAnimalApplications: string[]): Promise<any> {
+        let usersAppliedForAdoption = [...allAnimalApplications].filter(el => !usersEmailList.includes(el));
+        return collectionReference.doc(animalId).update({ usersAppliedForAdoption })
+    },
     deleteAnimal(animalId: string): Promise<any> {
         return collectionReference.doc(animalId).delete()
     },

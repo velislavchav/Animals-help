@@ -1,8 +1,11 @@
 import { DataGrid, GridColDef, GridValueGetterParams } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { toast } from "react-toastify";
+import { AnimalService } from "../../../helpers/services/AnimalService";
 import { UserService } from "../../../helpers/services/UserService";
 import { INormalUser } from "../../../models/INormalUser";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const columns: GridColDef[] = [
   {
@@ -27,7 +30,10 @@ const columns: GridColDef[] = [
 ];
 
 export default function AdoptionApplicationsTable(props: any) {
+  const animalId = props.animalId;
+  const history = useHistory();
   const [usersApplication, setUsersApplication] = useState<INormalUser[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<string[]>([]) //emails of the users
 
   useEffect(() => {
     const result: INormalUser[] = [];
@@ -38,18 +44,40 @@ export default function AdoptionApplicationsTable(props: any) {
         });
         setUsersApplication(result as INormalUser[]);
       })
-    } catch { 
+    } catch {
       toast.error("Something went wrong with extracting users applications.")
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDeleteApplications = async () => {
+    try {
+      await AnimalService.removeMultipleUsersApplicationForAdoption(selectedApplications, animalId, props.applicationsForAdoption).then(() => {
+        UserService.removeApplicationOnMultipleUsersForAdoption(selectedApplications, animalId).then(() => {
+          history.push("/animals");
+          toast.success("You have successfully removed the applications for adopting!");
+        })
+      });
+    } catch (error) {
+      toast.error("Something went wrong with removing the applications for adopting!");
+    }
+  }
+
+  const handleRowsSelected = (dataSelected: any) => {
+    setSelectedApplications(dataSelected?.selectionModel as string[])
+  }
 
   return (
     <>
       {usersApplication.length > 0 ?
         <>
-          <span className="users-adopting-applications-table-title"> Applications from users for adopting this animal </span>
+          <div className="adopting-table-top">
+            <span className="users-adopting-applications-table-title"> Applications from users for adopting this animal </span>
+            {selectedApplications?.length > 0 ? <span className="delete-adopting-applications-btn"><DeleteIcon fontSize="default" onClick={handleDeleteApplications}></DeleteIcon>Delete selected items </span> : <></>}
+          </div>
           <section className="users-adopting-applications-table">
-            <DataGrid rows={usersApplication} columns={columns} pageSize={5} checkboxSelection />
+            <DataGrid rows={usersApplication} columns={columns} pageSize={5} checkboxSelection
+              // onRowSelected={(e) => handleRowsSelected(e?.data as INormalUser[])} 
+              onSelectionModelChange={itm => handleRowsSelected(itm as any)} />
           </section>
         </> : <></>}
     </>
