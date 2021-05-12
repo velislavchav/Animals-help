@@ -52,10 +52,12 @@ export const AnimalService = {
         const updatedApplicationsArray: string[] = [...(animal?.usersAppliedForAdoption as string[]), userEmail];
         return collectionReference.doc(animal.id).update({ usersAppliedForAdoption: updatedApplicationsArray })
     },
-    removeUserApplicationForAdoption(userEmail: string, animal: IAnimal): Promise<any> {
+    async removeUserApplicationForAdoption(userEmail: string, animal: IAnimal): Promise<any> {
         let updatedApplicationsArray = [...animal.usersAppliedForAdoption];
         const applicationIndexForRemoving = updatedApplicationsArray.findIndex(el => el === userEmail);
-        if (applicationIndexForRemoving >= 0) updatedApplicationsArray.splice(applicationIndexForRemoving, 1)
+        if (applicationIndexForRemoving >= 0) {
+            updatedApplicationsArray.splice(applicationIndexForRemoving, 1)
+        }
         return collectionReference.doc(animal.id).update({ ...animal, usersAppliedForAdoption: updatedApplicationsArray })
     },
     removeMultipleUsersApplicationForAdoption(usersEmailList: string[], animalId: string, allAnimalApplications: string[]): Promise<any> {

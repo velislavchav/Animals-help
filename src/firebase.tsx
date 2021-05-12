@@ -16,6 +16,7 @@ const app = firebase.initializeApp({
   // appId: "1:1042671919014:web:ce359ebe04a485a99a3967",
 });
 
+export const defaultAuth = firebase.auth;
 export const auth = app.auth();
 export const firebaseTimestamp = firebase.firestore.FieldValue.serverTimestamp();
 export default app;

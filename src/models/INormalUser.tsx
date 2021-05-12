@@ -1,12 +1,10 @@
-export interface INormalUser {
-  id?: string;
-  email: string;
+import { IGoogleUser } from "./IGoogleUser";
+
+export interface INormalUser extends IGoogleUser {
   password?: string;
   firstName: string;
   lastName: string;
   // profileImageUrl: string;
-  role: string;
   createdAt?: Date;
   phone: string;
-  applicationsForAdoption: string[];
 }

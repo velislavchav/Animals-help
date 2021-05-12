@@ -18,7 +18,7 @@ import AdoptionApplicationsTable from "./AdoptionApplicationsTable"
 
 export default function AnimalDetails(props: any) {
   const animalId = props.match.params.id;
-  const { currentUser } = useAuth();
+  const { currentUserAdditionalData } = useAuth();
   const [animal, setAnimal] = useState<IAnimal>({
     id: animalId,
     type: "",
@@ -51,8 +51,8 @@ export default function AnimalDetails(props: any) {
       <section id="animal-details-container">
         <div className="animal-details-top-buttons-container">
           <Button color="inherit" component={Link} to={'/animals'}>Back to all animals</Button>
-          {IsTheUserHasAccess(currentUser, ["normal"]) ? <AdoptAnimalAgreementModal {...animal} /> : ""}
-          {IsTheUserHasAccess(currentUser, ["shelter"]) && currentUser.email === animal.creator ? <DeleteAnimalModal {...animal} /> : ""}
+          {IsTheUserHasAccess(currentUserAdditionalData, ["normal"]) ? <AdoptAnimalAgreementModal {...animal} /> : ""}
+          {IsTheUserHasAccess(currentUserAdditionalData, ["shelter"]) && currentUserAdditionalData.email === animal.creator ? <DeleteAnimalModal {...animal} /> : ""}
         </div>
         <Paper
           elevation={3}
@@ -97,7 +97,7 @@ export default function AnimalDetails(props: any) {
           {animal.description}
         </p>
       </section>
-      {IsTheUserHasAccess(currentUser, ["shelter"]) && currentUser.email === animal.creator ? <AdoptionApplicationsTable applicationsForAdoption={animal?.usersAppliedForAdoption} animalId={animalId} /> : ""}
+      {IsTheUserHasAccess(currentUserAdditionalData, ["shelter"]) && currentUserAdditionalData.email === animal.creator ? <AdoptionApplicationsTable applicationsForAdoption={animal?.usersAppliedForAdoption} animalId={animalId} /> : ""}
     </>
   );
 }

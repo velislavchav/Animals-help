@@ -1,25 +1,63 @@
-.login-form {
-  flex-grow: 1;
-  max-width: 600px;
+$heightContainers: 280px;
 
-  .MuiTextField-root {
-    margin: 8px;
-    width: 97%;
-    margin-bottom: 35px;
-  }
+.login {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 50px;
+  min-height: $heightContainers;
 
-  h2 {
+  .form {
+    flex-grow: 2;
+    max-width: 600px;
+
+    .MuiTextField-root {
+      margin: 8px;
+      width: 97%;
+      margin-bottom: 35px;
+    }
+
+    h2 {
       text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .login-password {
+      width: 97%;
+      margin: 8px;
+      margin-bottom: "35px";
+    }
+
+    .login-submit {
+      width: 97%;
+      margin: 8px;
+    }
+
+    .register-redirect {
+      display: block;
+      width: 100%;
+      cursor: pointer;
+      color: #3f51b5;
+      text-align: center;
+    }
   }
 
-  .login-password {
-    width: 97%;
-    margin: 8px;
-    margin-bottom: "35px";
-  }
+  .third-party-logins {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    min-height: $heightContainers;
+    margin-left: 30px;
+    max-width: 64px;
 
-  .login-submit {
-    width: 97%;
-    margin: 8px;
+    img {
+      cursor: pointer;
+      max-width: 48px;
+      margin-top: 48px;
+    }
   }
 }

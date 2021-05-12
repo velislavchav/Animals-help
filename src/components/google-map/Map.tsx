@@ -37,7 +37,7 @@ export default function Map() {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string,
         libraries
     })
-    const { currentUser } = useAuth();
+    const { currentUserAdditionalData } = useAuth();
     const [markers, setMarkers] = useState<IMapMarker[]>([])
     const [newMarker, setNewMarker] = useState<IMapMarker>()
     const [selectedMarker, setSelectedMarker] = useState<IMapMarker | null>(null)
@@ -144,7 +144,7 @@ export default function Map() {
                         {selectedMarker ? <InfoWindow position={{ lat: selectedMarker?.lat, lng: selectedMarker?.lng }} onCloseClick={() => setSelectedMarker(null)}><article>
                             <h2>{getMarkerTitle(selectedMarker.signalType)} spotted!</h2>
                             <p> Spotted at {formatFullDate(selectedMarker?.time)}</p>
-                            {IsTheUserHasAccess(currentUser, ["institution"]) ? <Button onClick={deleteMarker} variant="contained" color="secondary" className="delete-map-signal"> Delete this signal </Button> : <></>}
+                            {IsTheUserHasAccess(currentUserAdditionalData, ["institution"]) ? <Button onClick={deleteMarker} variant="contained" color="secondary" className="delete-map-signal"> Delete this signal </Button> : <></>}
                         </article></InfoWindow> : null}
                         <MapConfirmationModal newMarker={newMarker} mapConfirmationSubmission={mapConfirmationSubmission} handleMapClick={handleMapClick} handleClickCloseModal={handleClickCloseModal}></MapConfirmationModal>
                     </GoogleMap>

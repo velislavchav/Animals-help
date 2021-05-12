@@ -12,7 +12,7 @@ import { IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 import { useState } from 'react';
 
 export default function Navigation() {
-    const { logout, currentUser } = useAuth();
+    const { logout, currentUser, currentUserAdditionalData } = useAuth();
     const history = useHistory();
     const [displayMobileMenu, setDisplayMobileMenu] = useState(false);
 
@@ -45,7 +45,7 @@ export default function Navigation() {
                     <Button color="inherit" component={Link} to={'/shelters'}> Shelters </Button>
                     {currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button>}
                     {currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button>}
-                    {IsTheUserHasAccess(currentUser, ["shelter"]) ? <Button color="inherit" component={Link} to={'/animals/add'}> Add animal </Button> : ""}
+                    {IsTheUserHasAccess(currentUserAdditionalData, ["shelter"]) ? <Button color="inherit" component={Link} to={'/animals/add'}> Add animal </Button> : ""}
                     {currentUser?.email ? <Button color="inherit" onClick={handleLogout}> Logout </Button> : ""}
                 </nav>
             </Toolbar>
@@ -56,7 +56,7 @@ export default function Navigation() {
                 <Button color="inherit" component={Link} to={'/shelters'}> Shelters </Button>
                 {currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/register'}> Register </Button>}
                 {currentUser?.email ? "" : <Button color="inherit" component={Link} to={'/user/login'}> Login </Button>}
-                {IsTheUserHasAccess(currentUser, ["shelter"]) ? <Button color="inherit" component={Link} to={'/animals/add'}> Add animal </Button> : ""}
+                {IsTheUserHasAccess(currentUserAdditionalData, ["shelter"]) ? <Button color="inherit" component={Link} to={'/animals/add'}> Add animal </Button> : ""}
                 {currentUser?.email ? <Button color="inherit" onClick={handleLogout}> Logout </Button> : ""}
             </nav>
         </AppBar>

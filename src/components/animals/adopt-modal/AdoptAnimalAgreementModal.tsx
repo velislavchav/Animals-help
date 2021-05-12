@@ -11,12 +11,11 @@ import { AnimalService } from '../../../helpers/services/AnimalService';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useHistory } from 'react-router';
 import { UserService } from '../../../helpers/services/UserService';
-import { INormalUser } from '../../../models/INormalUser';
 
 export default function AdoptAnimalAgreementModal(props: IAnimal) {
   const [openAdoptAnimal, setOpenAdoptAnimal] = useState(false);
   const history = useHistory();
-  const { currentUser, setLoading } = useAuth();
+  const { currentUser, currentUserAdditionalData, addUserApplicationsLocally, removeUserApplicationsLocally, setLoading } = useAuth();
   const handleClickOpenAdoptModal = () => {
     setOpenAdoptAnimal(true);
   };
@@ -25,32 +24,29 @@ export default function AdoptAnimalAgreementModal(props: IAnimal) {
     setOpenAdoptAnimal(false);
   };
 
-  const handleApplyForAdoptionAgreement = () => {
+  const handleApplyForAdoptionAgreement = async () => {
     try {
-      UserService.getLatestUserAdditionalData(currentUser?.email).then(userData => {
-        AnimalService.addUserApplicationForAdoption(currentUser?.email, props).then(() => {
-          UserService.addApplicationForAdoption(userData as INormalUser, props?.id)
-        }).then(() => {      
-          setOpenAdoptAnimal(false);
-          toast.success("You have successfully made request for adopting!");
-          history.push("/animals");
-          setLoading(true)
-        })
-      })
+      await AnimalService.addUserApplicationForAdoption(currentUser?.email, props);
+      const updatedApplications = await addUserApplicationsLocally([props?.id]);
+      await UserService.addApplicationForAdoption(currentUserAdditionalData?.email, updatedApplications);
+      await setOpenAdoptAnimal(false);
+      await setLoading(true);
+      await toast.success("You have successfully made request for adopting!");
+      await history.push("/animals");
     } catch (error) {
       toast.error("Something went wrong with the request for adopting!");
     }
   }
 
-  const removeUserAdoptionApplication = () => {
+  const removeUserAdoptionApplication = async () => {
     try {
-      AnimalService.removeUserApplicationForAdoption(currentUser?.email, props).then(() => {
-        UserService.removeApplicationForAdoption(currentUser as INormalUser, props?.id)
-      }).then(() => {
-        history.push("/animals");
-        toast.success("You have successfully removed your request for adopting!");
-        setOpenAdoptAnimal(false);
-      })
+      await AnimalService.removeUserApplicationForAdoption(currentUser?.email, props);
+      const updatedApplications = await removeUserApplicationsLocally([props?.id]);
+      await UserService.removeApplicationForAdoption(currentUserAdditionalData?.email, updatedApplications);
+      await setOpenAdoptAnimal(false);
+      await setLoading(true);
+      await toast.success("You have successfully removed your request for adopting!");
+      await history.push("/animals");
     } catch (error) {
       toast.error("Something went wrong with removing the request for adopting!");
     }
