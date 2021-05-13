@@ -83,6 +83,7 @@ export default function Login() {
         />
         <TextField
           label="Password"
+          type="password"
           onChange={handleChange("password")}
           onKeyPress={handleEnterSubmit}
         />

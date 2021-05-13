@@ -61,3 +61,19 @@ $heightContainers: 280px;
     }
   }
 }
+
+
+@media screen and (max-width: 768px) {
+  .login {
+    .third-party-logins {
+      flex-direction: row;
+      min-height: 64px;
+      max-width: $heightContainers;
+      margin-left: 0;
+
+      img {
+        margin: 38px;
+      }
+    }
+  }
+}
