@@ -48,9 +48,11 @@ export default function Login() {
   const handleGoogleSignIn = (e: any) => {
     e.preventDefault();
     try {
-      loginWithGoogle().then(() => {
-        toast.success("Successfully logged in");
-        history.push("/");
+      loginWithGoogle().then((error: string) => {
+        if(!error) {
+          toast.success("Successfully logged in");
+          history.push("/");
+        }
       });
     } catch (error) {
       toast.error(error?.message);
@@ -60,9 +62,11 @@ export default function Login() {
   const handleFacebookSignIn = (e: any) => {
     e.preventDefault();
     try {
-      loginWithFacebook().then(() => {
-        toast.success("Successfully logged in");
-        history.push("/");
+      loginWithFacebook().then((error: string) => {
+        if(!error) {
+          toast.success("Successfully logged in");
+          history.push("/");
+        }
       });
     } catch (error) {
       toast.error(error?.message);

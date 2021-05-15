@@ -1,4 +1,3 @@
-
 import firebase, { auth, defaultAuth } from "../firebase";
 import React, { useContext, useState, useEffect } from "react";
 import { UserService } from "../helpers/services/UserService";
@@ -45,29 +44,39 @@ export function AuthProvider({ children }) {
     return auth.createUserWithEmailAndPassword(email, password);
   }
 
-  function loginWithGoogle() {
+  async function loginWithGoogle() {
+    let error = "";
     const provider = new defaultAuth.GoogleAuthProvider();
-    return auth.signInWithPopup(provider).then((result) => {
+    await auth.signInWithPopup(provider).then((result) => {
       /** @type {firebase.auth.OAuthCredential} */
-      // The signed-in user info.
-      UserService.addGoogleOrFBUserToCollection(result.user).then(() => {
-        return result.user;
-      })
-    }).catch(() => {
-      console.log("something went wrong with google login")
-    });
-  }
-
-  function loginWithFacebook() {
-    const provider = new defaultAuth.FacebookAuthProvider();
-    auth.signInWithPopup(provider).then((result) => {
-        /** @type {firebase.auth.OAuthCredential} */
+      if(result.user) {
         UserService.addGoogleOrFBUserToCollection(result.user).then(() => {
           return result.user;
         })
-      })
-      .catch((error) => {
-        console.log("something went wrong with facebook login", error)
+      } else {
+        error = "Something went wrong with google login";
+      }
+    }).catch((errorCatched) => {
+      error = errorCatched.message;
+    });
+    return error;
+  }
+
+  async function loginWithFacebook() {
+    let error = "";
+    const provider = new defaultAuth.FacebookAuthProvider();
+    await auth.signInWithPopup(provider).then((result) => {
+        /** @type {firebase.auth.OAuthCredential} */
+        if(result.user) {
+          UserService.addGoogleOrFBUserToCollection(result.user).then(() => {
+            return result.user;
+          })
+        } else {
+          error = "Something went wrong with facebook login";
+        }
+      }).catch((errorCatched) => {
+        // eslint-disable-next-line
+        error = errorCatched?.message; 
       });
   }
 
