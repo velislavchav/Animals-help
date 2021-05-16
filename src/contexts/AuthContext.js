@@ -13,8 +13,9 @@ export function AuthProvider({ children }) {
   const [currentUserAdditionalData, setCurrentUserAdditionalData] = useState();
   const [loading, setLoading] = useState(true);
 
-  function updateCurrentUserAdditionalDataLocally(newData) {
-    setCurrentUserAdditionalData({ ...currentUserAdditionalData, ...newData });
+  function removeCurrentUserAdditionalDataLocally() {
+    setCurrentUserAdditionalData(null);
+    setCurrentUser(null)
   }
 
   function addUserApplicationsLocally(newApplications = []) {
@@ -135,7 +136,7 @@ export function AuthProvider({ children }) {
     loginWithFacebook,
     logout,
     resetPassword,
-    updateCurrentUserAdditionalDataLocally,
+    removeCurrentUserAdditionalDataLocally,
     addUserApplicationsLocally,
     removeUserApplicationsLocally,
     setLoading

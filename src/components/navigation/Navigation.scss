@@ -17,8 +17,19 @@
     display: none;
   }
 
+  .navigation-logo {
+    max-height: 48px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
   .title-navigation {
     flex-grow: 1;
+    text-align: left;
+    font-family: "Fredoka One", cursive;
+    font-weight: 400;
+    color: rgba(1,142,171,255);
+    cursor: pointer;
   }
 
   a:not(.menu-button) {
@@ -33,8 +44,6 @@
     #mobile-navigation {
       display: flex;
       flex-direction: column;
-      // height: 100vh;
-
       a {
         height: 48px;
       }
@@ -48,8 +57,15 @@
       display: inline-flex;
     }
 
-    // a:not(.menu-button) {
-    //     display: none;
-    //   }
+    .navigation-logo {
+      position: absolute;
+      right: 90px;
+    }
+
+    .title-navigation {
+      position: absolute;
+      right: 15px;
+      max-width: 100px;
+    }
   }
 }

@@ -51,11 +51,9 @@ export const UserService = {
         return collectionReference.doc(user?.email).update({ applicationsForAdoption: updatedApplicationsArray })
     },
     addApplicationForAdoption(userEmail: string, updatedApplicationsArray: string[]): Promise<any> {
-        console.log("updatedApplicationsArray", updatedApplicationsArray)
         return collectionReference.doc(userEmail).update({ applicationsForAdoption: updatedApplicationsArray })
     },
     removeApplicationForAdoption(userEmail: string, updatedApplicationsArray: string[]): Promise<any> {
-        console.log("updated applications in user", updatedApplicationsArray)
         return collectionReference.doc(userEmail).update({ applicationsForAdoption: updatedApplicationsArray })
     },
     removeApplicationOnMultipleUsersForAdoption(usersEmails: string[], animalId: string): Promise<any> {

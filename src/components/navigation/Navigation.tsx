@@ -12,12 +12,13 @@ import { IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 import { useState } from 'react';
 
 export default function Navigation() {
-    const { logout, currentUser, currentUserAdditionalData } = useAuth();
+    const { logout, currentUser, currentUserAdditionalData, removeCurrentUserAdditionalDataLocally } = useAuth();
     const history = useHistory();
     const [displayMobileMenu, setDisplayMobileMenu] = useState(false);
 
     const handleLogout = async () => {
         try {
+            await removeCurrentUserAdditionalDataLocally();
             await logout();
             toast.success("Successfully logged out");
             history.push("/");
@@ -36,8 +37,9 @@ export default function Navigation() {
                 <IconButton edge="start" className="menu-button" color="inherit" aria-label="menu" onClick={displayMobileNavigation} >
                     <MenuIcon />
                 </IconButton>
+                <img src="/logo.png" className="navigation-logo" alt="Help animals logo" title="Help animals" onClick={() => history.push("/")}/>
                 <Typography variant="h6" component="h1" className="title-navigation" onClick={() => history.push("/")}>
-                    HelPANimals
+                    Help <br /> animals
                 </Typography>
                 <nav id="desktop-navigation">
                     <Button color="inherit" component={Link} to={'/map'}> Map </Button>
