@@ -5,7 +5,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/ValidateFormFields";
 import { UserService } from "../../../helpers/services/UserService";
 import { useHistory } from "react-router";
-import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 import { IInstitute } from "../../../models/IInstitute";
 
 export default function InstituteRegisterForm() {
@@ -53,12 +53,15 @@ export default function InstituteRegisterForm() {
         toast.error("Fill all required fields. The required fields have '*' in the end")
       } else {
         try {
+          displayLoader();
           await signup(institution.email, institution.password);
           await UserService.addInstitutionToCollection(institution);
           toast.success("Successfully registered");
           history.push("/");
+          hideLoader();
         } catch (error) {
           toast.error(error?.message);
+          hideLoader();
         }
       }
     }
@@ -102,7 +105,7 @@ export default function InstituteRegisterForm() {
       />
       <TextField
         required
-        label="Address (country, town, street, house number)"
+        label="Address (country, town, street, house)"
         value={institution.address}
         onChange={handleChange("address")}
         onKeyPress={handleEnterSubmit}

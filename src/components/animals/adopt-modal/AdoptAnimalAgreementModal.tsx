@@ -11,6 +11,7 @@ import { AnimalService } from '../../../helpers/services/AnimalService';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useHistory } from 'react-router';
 import { UserService } from '../../../helpers/services/UserService';
+import { displayLoader, hideLoader } from '../../../helpers/GeneralHelper';
 
 export default function AdoptAnimalAgreementModal(props: IAnimal) {
   const [openAdoptAnimal, setOpenAdoptAnimal] = useState(false);
@@ -26,15 +27,18 @@ export default function AdoptAnimalAgreementModal(props: IAnimal) {
 
   const handleApplyForAdoptionAgreement = async () => {
     try {
+      displayLoader();
       await AnimalService.addUserApplicationForAdoption(currentUser?.email, props);
       const updatedApplications = await addUserApplicationsLocally([props?.id]);
       await UserService.addApplicationForAdoption(currentUserAdditionalData?.email, updatedApplications);
-      await setOpenAdoptAnimal(false);
-      await setLoading(true);
-      await toast.success("You have successfully made request for adopting!");
-      await history.push("/animals");
+      setOpenAdoptAnimal(false);
+      setLoading(true);
+      toast.success("You have successfully made request for adopting!");
+      history.push("/animals");
+      hideLoader();
     } catch (error) {
       toast.error("Something went wrong with the request for adopting!");
+      hideLoader();
     }
   }
 

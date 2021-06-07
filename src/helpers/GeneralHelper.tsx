@@ -76,6 +76,14 @@ const getMarkerTitle = (markerSignalType: IMapSignalType): string => {
     return "Injured animal";
 }
 
+const displayLoader = () => {
+    document.getElementById("loader-container")?.classList.remove("disp-none");
+}
+
+const hideLoader = () => {
+    document.getElementById("loader-container")?.classList.add("disp-none");
+}
+
 export {
     CheckIfStringIsEmpty,
     CheckIfObjectHasAnyValues,
@@ -84,5 +92,7 @@ export {
     IsTheUserHasAccess,
     formatFullDate,
     getMarkerIcon,
-    getMarkerTitle
+    getMarkerTitle,
+    displayLoader,
+    hideLoader
 };

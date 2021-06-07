@@ -6,7 +6,7 @@ import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/Valida
 import { INormalUser } from "../../../models/INormalUser";
 import { UserService } from "../../../helpers/services/UserService";
 import { useHistory } from "react-router";
-import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 
 export default function NormalUserRegisterForm() {
   const [repassword, setRepassword] = useState("");
@@ -52,12 +52,15 @@ export default function NormalUserRegisterForm() {
         toast.error("Fill all required fields. The required fields have '*' in the end")
       } else {
         try {
+          displayLoader();
           await signup(normalUser.email, normalUser.password);
           await UserService.addNormalUserToCollection(normalUser);
           toast.success("Successfully registered");
           history.push("/");
+          hideLoader();
         } catch (error) {
           toast.error(error?.message);
+          hideLoader();
         }
       }
     }

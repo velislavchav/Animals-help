@@ -6,13 +6,12 @@ import { ILogin } from "../../../models/ILogin";
 import { toast } from "react-toastify";
 import "./Login.scss";
 import { Button, TextField } from "@material-ui/core";
-import { CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIsEnterPressed, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 
 export default function Login() {
   const { login, loginWithGoogle, loginWithFacebook } = useAuth();
   const history = useHistory();
   const [emailErrorText, setEmailErrorText] = useState("");
-  // const [showPassword, setShowPassword] = useState(false);
   const [values, setValues] = useState<ILogin>({
     email: "",
     password: "",
@@ -36,11 +35,14 @@ export default function Login() {
     e.preventDefault();
     if (!emailErrorText) {
       try {
+        displayLoader();
         await login(values.email, values.password);
         toast.success("Successfully logged in");
         history.push("/");
+        hideLoader();
       } catch (error) {
         toast.error(error?.message);
+        hideLoader();
       }
     }
   };
@@ -48,28 +50,34 @@ export default function Login() {
   const handleGoogleSignIn = (e: any) => {
     e.preventDefault();
     try {
+      displayLoader();
       loginWithGoogle().then((error: string) => {
         if(!error) {
           toast.success("Successfully logged in");
           history.push("/");
         }
+        hideLoader();
       });
     } catch (error) {
       toast.error(error?.message);
+      hideLoader();
     }
   }
 
   const handleFacebookSignIn = (e: any) => {
     e.preventDefault();
     try {
+      displayLoader();
       loginWithFacebook().then((error: string) => {
         if(!error) {
           toast.success("Successfully logged in");
           history.push("/");
         }
+        hideLoader();
       });
     } catch (error) {
       toast.error(error?.message);
+      hideLoader();
     }
   }
 

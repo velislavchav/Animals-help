@@ -7,7 +7,7 @@ import AnimalsFilters from "./list-filters/AnimalsFilter";
 import Pagination from "@material-ui/lab/Pagination";
 import IAnimalFilters from "../../../models/IAnimalFilters";
 import "./Animals.scss";
-import { CheckIfObjectHasAnyValues } from "../../../helpers/GeneralHelper";
+import { CheckIfObjectHasAnyValues, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 
 export default function Animals() {
   const animlsPerPage = 9;
@@ -21,31 +21,38 @@ export default function Animals() {
   const history = useHistory();
 
   useEffect(() => {
+    displayLoader();
     let result: IAnimal[] = [];
     AnimalService.getAllAnimals().then(data => {
       data.forEach((animal: IAnimal) => result.push(animal));
       setAnimals(result as any);
+      hideLoader();
     });
   }, []);
 
   const filterChange = (event: React.ChangeEvent<HTMLSelectElement | any>) => {
+    displayLoader();
     let newFilterState = { ...filters, [event.target.name]: event.target.value };
     setFilters(newFilterState);
     try {
       if (CheckIfObjectHasAnyValues(newFilterState)) {
         AnimalService.filterAnimals(newFilterState).then(data => {
           setAnimals(data as IAnimal[]);
+          hideLoader();
         });
       } else {
         AnimalService.getAllAnimals().then(data => {
           setAnimals(data as IAnimal[]);
+          hideLoader();
         });
       }
-    } catch { }
+    } catch { hideLoader(); }
   };
 
   const handlePagination = (event: any) => {
-      setCurrentPage(+event.target.textContent)
+    displayLoader();
+    setCurrentPage(+event.target.textContent);
+    hideLoader();
   }
 
   const redirectToAnimalDetails = (animal: IAnimal) => {

@@ -8,7 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from 'react-toastify';
 import "./Navigation.scss";
-import { IsTheUserHasAccess } from '../../helpers/GeneralHelper';
+import { displayLoader, hideLoader, IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 import { useState } from 'react';
 
 export default function Navigation() {
@@ -18,12 +18,15 @@ export default function Navigation() {
 
     const handleLogout = async () => {
         try {
+            displayLoader();
             await removeCurrentUserAdditionalDataLocally();
             await logout();
             toast.success("Successfully logged out");
             history.push("/");
+            hideLoader();
         } catch {
             toast.error("Something went wrong! Please, refresh the page and try again!");
+            hideLoader();
         }
     }
 

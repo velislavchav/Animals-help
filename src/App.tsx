@@ -8,6 +8,7 @@ import AddAnimal from "./components/animals/add/AddAnimal";
 import PrivateRoute from "./helpers/PrivateRoute"
 import ShelterList from "./components/shelters/ShelterList";
 import Home from "./components/home/Home";
+import NotFound404 from "./components/errors/NotFound404";
 // import AdoptionApplications from "./components/shelters/AdoptionApplications";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/animals" component={Animals} exact/>
         <Route path="/user/register" component={Register} />
         <Route path="/user/login" component={Login} />
+        <Route component={NotFound404} />
       </Switch>
     </main>
   );

@@ -4,12 +4,15 @@ import "./Home.scss"
 import PlaceIcon from '@material-ui/icons/Place';
 import AccessibilityIcon from '@material-ui/icons/Accessibility';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import { displayLoader, hideLoader } from "../../helpers/GeneralHelper";
 
 export default function Home() {
     const history = useHistory();
 
     const navigateToGoogleMap = () => {
-        history.push("/map")
+        displayLoader();
+        history.push("/map");
+        hideLoader();
     }
 
     return (

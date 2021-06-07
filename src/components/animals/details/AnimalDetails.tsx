@@ -13,7 +13,7 @@ import "./AnimalDetails.scss";
 import { IAnimal } from "../../../models/IAnimal";
 import AdoptAnimalAgreementModal from "../adopt-modal/AdoptAnimalAgreementModal";
 import DeleteAnimalModal from "../delete/DeleteAnimalModal";
-import { IsTheUserHasAccess } from "../../../helpers/GeneralHelper";
+import { displayLoader, IsTheUserHasAccess, hideLoader } from "../../../helpers/GeneralHelper";
 import AdoptionApplicationsTable from "./AdoptionApplicationsTable"
 
 export default function AnimalDetails(props: any) {
@@ -33,14 +33,17 @@ export default function AnimalDetails(props: any) {
   })
 
   useEffect((): any => {
+    displayLoader();
     AnimalService.getAnimal(animalId).then((doc) => {
       if (doc.exists) {
         setAnimal(doc.data() as IAnimal)
       } else {
         console.log("No such document!");
       }
+      hideLoader();
     }).catch((error) => {
       console.log("Error getting document:", error);
+      hideLoader();
     })
 
     return () => { return false };

@@ -4,7 +4,7 @@ import { IMapMarker } from '../../models/IMapMarker';
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import Button from '@material-ui/core/Button';
 import "./Map.scss"
-import { formatFullDate, getMarkerIcon, getMarkerTitle, IsTheUserHasAccess } from '../../helpers/GeneralHelper';
+import { displayLoader, formatFullDate, getMarkerIcon, getMarkerTitle, hideLoader, IsTheUserHasAccess } from '../../helpers/GeneralHelper';
 import { IMapSignalType } from '../../models/IMapSignalType';
 import { GoogleMapService } from '../../helpers/services/GoogleMapService';
 import { toast } from 'react-toastify';
@@ -52,18 +52,22 @@ export default function Map() {
 
 
     useEffect(() => {
+        displayLoader();
         let result: IMapMarker[] = [];
         try {
             GoogleMapService.getAllMarkers().then(data => {
                 data.forEach((marker: IMapMarker) => result.push(marker));
-                setMarkers(result)
+                setMarkers(result);
+                hideLoader();
             })
         } catch (error) {
             toast.error("Something went wrong with fetching old markers!")
+            hideLoader();
         }
     }, [])
 
     const handleClickOpenModal = (event: any) => {
+        displayLoader();
         const markerData: IMapMarker = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng(),
@@ -72,13 +76,17 @@ export default function Map() {
         }
         setNewMarker(markerData);
         setMapConfirmationSubmission(true);
+        hideLoader();
     };
 
     const handleClickCloseModal = () => {
+        displayLoader();
         setMapConfirmationSubmission(false);
+        hideLoader();
     };
 
     const handleMapClick = async (newMarker: IMapMarker) => {
+        displayLoader();
         setSelectedMarker(null)
         try {
             await GoogleMapService.addMarker(newMarker).then(() => {
@@ -95,11 +103,14 @@ export default function Map() {
             }
         } catch (error) {
             toast.error("Something went wrong!")
+            hideLoader();
         }
         setMapConfirmationSubmission(false);
+        hideLoader();
     }
 
     const changeSignalType = (type: string) => {
+        displayLoader();
         setSelectedMarker(null)
         switch (type) {
             case "lost":
@@ -112,21 +123,27 @@ export default function Map() {
                 setSelectedSignalType({ isInjured: true, isLost: false })
                 break;
         }
+        hideLoader();
     }
 
     const openSelectedMarker = (marker: IMapMarker) => {
         try {
+            displayLoader();
             FileService.getMarkerImages(marker).then((imagesUrl) => {
                 setSelectedMarkerImages(imagesUrl);
                 setSelectedMarker(marker);
+                hideLoader();
             });
         } catch (error) {
             console.log(error)
+            hideLoader();
         }
     }
 
     const uploadMarkerImagesLocally = (e: any) => {
+        displayLoader();
         setNewMarkerImages(e?.target?.files)
+        hideLoader();
     }
 
     const mapRef = useRef();
@@ -136,15 +153,18 @@ export default function Map() {
     }, [])
 
     const panTo = useCallback(({ lat, lng }) => {
+        displayLoader();
         setSelectedMarker(null)
         const mapRefAsAny = mapRef as any;
         mapRefAsAny?.current?.panTo({ lat, lng });
         mapRefAsAny?.current?.setZoom(15);
+        hideLoader();
     }, [])
 
     const deleteMarker = async () => {
         if (selectedMarker !== null) {
             try {
+                displayLoader();
                 await FileService.deleteMarkerImages(selectedMarker).then(error => {
                     if(error) console.log(error)
                 })
@@ -157,8 +177,10 @@ export default function Map() {
                     setSelectedMarkerImages([]);
                     toast.success("Successfully deleted signal!")
                 });
+                hideLoader();
             } catch {
                 toast.success("Something went wrong with deleting the signal!")
+                hideLoader();
             }
         }
     }

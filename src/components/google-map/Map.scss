@@ -10,6 +10,11 @@
     .locate-me-button {
         right: 20px;
         height: 75px;
+
+        img {
+            min-height: 60px;
+            min-width: 60px;
+        }
     }
 
     .signals-type-holder {

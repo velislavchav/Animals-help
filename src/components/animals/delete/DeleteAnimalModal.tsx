@@ -10,6 +10,7 @@ import { useHistory } from 'react-router';
 import { UserService } from '../../../helpers/services/UserService';
 import { AnimalService } from '../../../helpers/services/AnimalService';
 import { toast } from 'react-toastify';
+import { displayLoader, hideLoader } from '../../../helpers/GeneralHelper';
 
 export default function DeleteAnimalModal(props: IAnimal) {
   const [openAdoptAnimal, setOpenAdoptAnimal] = useState(false);
@@ -23,6 +24,7 @@ export default function DeleteAnimalModal(props: IAnimal) {
   };
 
   const handleDeleteAnimal = () => {
+    displayLoader();
     try {
       AnimalService.deleteAnimal(props.id).then(() => {
         UserService.removeDeletedAnimalApplicationsFromAllUsers(props.id)
@@ -30,9 +32,11 @@ export default function DeleteAnimalModal(props: IAnimal) {
         setOpenAdoptAnimal(false);
         toast.success("You have successfully removed the animal!");
         history.push("/animals");
+        hideLoader();
       })
     } catch (error) {
       toast.error("Something went wrong with the removing the animal!");
+      hideLoader();
     }
   }
 

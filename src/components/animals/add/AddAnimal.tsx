@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "./AddAnimal.scss";
 import { Button, TextField } from "@material-ui/core";
 import { AnimalService } from "../../../helpers/services/AnimalService";
-import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -46,12 +46,15 @@ export default function AddAnimal() {
             toast.error("Fill all required fields. The required fields have '*' in the end")
         } else {
             try {
+                displayLoader();
                 AnimalService.addAnimalToCollection(newAnimal).then(() => {
                     toast.success("Animal is added successfully")
                     history.push("/animals")
+                    hideLoader();
                 })
             } catch (error) {
                 toast.error(error);
+                hideLoader();
             }
         }
     };

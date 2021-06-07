@@ -6,7 +6,7 @@ import { EmailErrorMessage, PasswordErrorMessage } from "../../../helpers/Valida
 import { IShelter } from "../../../models/IShelter";
 import { UserService } from "../../../helpers/services/UserService";
 import { useHistory } from "react-router";
-import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed } from "../../../helpers/GeneralHelper";
+import { CheckIfAllObjectPropsAreFilled, CheckIsEnterPressed, displayLoader, hideLoader } from "../../../helpers/GeneralHelper";
 
 export default function ShelterRegisterForm() {
   const [repassword, setRepassword] = useState("");
@@ -53,12 +53,15 @@ export default function ShelterRegisterForm() {
         toast.error("Fill all required fields. The required fields have '*' in the end")
       } else {
         try {
+          displayLoader();
           await signup(shelter.email, shelter.password);
           await UserService.addShelterToCollection(shelter);
           toast.success("Successfully registered");
           history.push("/");
+          hideLoader();
         } catch (error) {
           toast.error(error?.message);
+          hideLoader();
         }
       }
     }
@@ -102,7 +105,7 @@ export default function ShelterRegisterForm() {
       />
       <TextField
         required
-        label="Address (country, town, street, house number)"
+        label="Address (country, town, street, house)"
         value={shelter.address}
         onChange={handleChange("address")}
         onKeyPress={handleEnterSubmit}
